@@ -2,7 +2,7 @@
  * uart.h
  *
  *  Created on: 20 oct. 2017
- *      Author: Iv·n
+ *      Author: Iv√°n
  */
 
 #ifndef HAL_UART_BASE_UART_H_
@@ -12,7 +12,6 @@
 #include "UART_map.h"
 
 
-#endif /* HAL_UART_BASE_UART_H_ */
 #define MAX_UART_BUFFER_SIZE    256
 
 
