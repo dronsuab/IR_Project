@@ -16,73 +16,7 @@ uint32_t uartBufferSize[NUM_OF_UART];
 USART_HandleTypeDef uartHandlers[NUM_OF_UART];
 tUartContext uartCircularBuffers[NUM_OF_UART];
 eError uartStatusList[NUM_OF_UART];
-static tUart uartPortIrq;
 uint8_t RxBufferbyte;
-
-static eError uartReadIT(tUart uartPort, uint8_t* rdBuffer, uint32_t rdSize);
-static eError uartWriteIT(tUart uartPort, uint8_t* buffer, uint32_t size);
-
-void HAL_UART_MspInit(USART_HandleTypeDef *uart_handler)
-{
-    if(uart_handler->Instance == USART1){
-        __HAL_RCC_USART1_CLK_ENABLE();
-    }
-    else if (uart_handler->Instance == USART2){
-        __HAL_RCC_USART2_CLK_ENABLE();
-    }
-
-    /* Enable the UART Data Register not empty Interrupt. ALWAYS ENABLED */
-    __HAL_USART_ENABLE_IT(uart_handler, USART_IT_RXNE);
-
-}
-
-void HAL_UART_TxCpltCallback(USART_HandleTypeDef *uart_handler)
-{
-	uint8_t byte;
-	if ( GetQueuePendingBytes(&uartCircularBuffers[uartPortIrq].txBuffer) != 0)
-	{
-		 byte = (uint8_t)(GetQueueByte(&uartCircularBuffers[uartPortIrq].txBuffer) & (uint8_t)0xFF);
-		 HAL_UART_Transmit_IT(&uartHandlers[uartPortIrq], &byte, 1);
-	}
-	else
-	{
-		 __HAL_UART_DISABLE_IT(&uartHandlers[uartPortIrq], USART_IT_TXE);
-	}
-}
-
-
-void HAL_UART_RxCpltCallback(USART_HandleTypeDef *uart_handler)
-{
-	const tUartInstanceMap* uart_instance; //Montseny handler
-
-	uart_instance = &UARTInstanceMap[uartPortIrq];
-
-	//IF callback defined use it. Otherwise, default behaviour
-	if(uart_instance->rxCallback != NULL){
-		uart_instance->rxCallback(RxBufferbyte);
-	}
-	else{
-		if(GetQueueFreeBytes(&uartCircularBuffers[uartPortIrq].rxBuffer) > 0){
-			AddQueueByte(&uartCircularBuffers[uartPortIrq].rxBuffer, RxBufferbyte);
-		}
-		else{
-			uartStatusList[uartPortIrq] = RET_BUFFER_FULL;
-		}
-	}
-
-	 HAL_UART_Receive_IT(uart_handler, &RxBufferbyte, 1 );
-
-}
-
-
-void uartIRQHandler(tUart uartPort)
-{
-    USART_HandleTypeDef* uart_handler;
-
-    uart_handler = &uartHandlers[uartPort];
-    uartPortIrq = uartPort;
-    HAL_USART_IRQHandler(uart_handler);
-}
 
 
 eError uartInit(void)
@@ -103,11 +37,11 @@ eError uartInit(void)
         uart_handler->Init.Mode       = USART_MODE_TX_RX;
         //se pueden añadir los parámetros Init.CLKPolarity, Init.CLKPhase e Init.CLKLastBit
 
-		CreateQueue(&uartCircularBuffers[i].rxBuffer,
+		CreateFIFO(&uartCircularBuffers[i].rxBuffer,
                 UARTInstanceMap[i].rxBufferPtr,
                 UARTInstanceMap[i].rxBufferSize);
 
-		CreateQueue(&uartCircularBuffers[i].txBuffer,
+		CreateFIFO(&uartCircularBuffers[i].txBuffer,
                 UARTInstanceMap[i].txBufferPtr,
                 UARTInstanceMap[i].txBufferSize);
 
@@ -116,10 +50,6 @@ eError uartInit(void)
     return result;
 }
 
-/*************************************************************************//**
- * @brief  Stops UART driver.
- * @return  None.
- ****************************************************************************/
 eError uartStop(void)
 {
     eError result = RET_OK;
@@ -137,10 +67,6 @@ eError uartStop(void)
     return result;
 }
 
-/*************************************************************************//**
- * @brief  Starts UART driver.
- * @return  None.
- ****************************************************************************/
 eError uartStart(void)
 {
     eError result = RET_OK;
@@ -163,19 +89,32 @@ eError uartStart(void)
     return result;
 }
 
-eError uartRead(tUart uartPort, uint8_t* buffer)
+eError uartRead(eUart uartPort, uint8_t* buffer)
 {
     eError result = RET_FAIL;
-    uint32_t rdSize;
+    uint32_t i;
+    uint8_t byte;
+    uint32_t bufferSize;
 
-    rdSize = uartBufferSize[uartPort];
+    bufferSize = uartBufferSize[uartPort];
 
-    return uartReadIT(uartPort, buffer, rdSize);
+    if(GetFIFOPendingBytes(&uartCircularBuffers[uartPort].rxBuffer) < bufferSize ){
+        result =  RET_FAIL;
+    }else{
+        for(i=0; i<bufferSize; i++){
+            byte = GetFIFOByte(&uartCircularBuffers[uartPort].rxBuffer);
+            buffer[i] = byte;
+        }
+        result = RET_OK;
+    }
+    return result;
 }
 
-eError uartWrite(tUart uartPort, uint8_t* buffer)
+eError uartWrite(eUart uartPort, uint8_t* buffer)
 {
     eError result = RET_OK;
+    uint32_t i;
+    uint8_t byte = 0;
     uint32_t bufferSize;
 
     bufferSize = uartBufferSize[uartPort];
@@ -184,61 +123,33 @@ eError uartWrite(tUart uartPort, uint8_t* buffer)
         return RET_INVALID_PARAMETER;
     }
 
-    result = uartWriteIT(uartPort, buffer, bufferSize);
+    if(GetFIFOFreeBytes(&uartCircularBuffers[uartPort].txBuffer) < bufferSize){
+	   return RET_BUFFER_FULL;
+   }
+
+   for(i = 0; i < bufferSize; i++){
+	   AddFIFOByte(&uartCircularBuffers[uartPort].txBuffer, buffer[i]);
+   }
+
+   if ( GetFIFOPendingBytes(&uartCircularBuffers[uartPort].txBuffer) > 0)
+   {
+	 HAL_USART_Transmit_IT(&uartHandlers[uartPort], &byte, 1);
+   }
+
+   return result;
 
 }
 
-static eError uartReadIT(tUart uartPort, uint8_t* rdBuffer , uint32_t rdSize)
+uint32_t uartGetBufferSize(eUart uartPort)
 {
-    eError result = RET_FAIL;
-    uint32_t i;
-    uint8_t byte;
-
-    if(GetQueuePendingBytes(&uartCircularBuffers[uartPort].rxBuffer) < rdSize ){
-        result =  RET_FAIL;
-    }else{
-        for(i=0; i<rdSize; i++){
-            byte = GetQueueByte(&uartCircularBuffers[uartPort].rxBuffer);
-            rdBuffer[i] = byte;
-        }
-        result = RET_OK;
-    }
-
-    return result;
+	uint16_t bufferSize = (GetFIFOPendingBytes(&uartCircularBuffers[uartPort].rxBuffer));
+    return bufferSize;
 }
 
-static eError uartWriteIT(tUart uartPort, uint8_t* buffer, uint32_t size)
-{
-    eError result = RET_OK;
-    uint32_t i;
-    uint8_t byte = 0;
-
-    if(GetQueueFreeBytes(&uartCircularBuffers[uartPort].txBuffer) < size){
-        return RET_BUFFER_FULL;
-    }
-
-    for(i = 0; i < size; i++){
-        AddQueueByte(&uartCircularBuffers[uartPort].txBuffer, buffer[i]);
-    }
-
-    if ( GetQueuePendingBytes(&uartCircularBuffers[uartPort].txBuffer) > 0)
-    {
-    	 /* send a empty buffer to enable Transmision and TXE */
-    	 HAL_USART_Transmit_IT(&uartHandlers[uartPort], &byte, 1);
-    }
-
-
-    return result;
-}
-
-uint32_t uartGetBufferSize(tUart uartPort)
-{
-    return (GetQueuePendingBytes(&uartCircularBuffers[uartPort].rxBuffer));
-}
-
-eError uartSetBufferSize(tUart uartPort, uint32_t bufferSize )
+eError uartSetBufferSize(eUart uartPort, uint32_t bufferSize )
 {
     eError result = RET_OK;
     uartBufferSize[uartPort] = bufferSize;
     return result;
 }
+

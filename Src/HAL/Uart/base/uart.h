@@ -10,9 +10,9 @@
 
 #include "common.h"
 #include "UART_map.h"
+#include "CircularBuffer.h"
 
 
-#endif /* HAL_UART_BASE_UART_H_ */
 #define MAX_UART_BUFFER_SIZE    256
 
 
@@ -23,8 +23,13 @@
 typedef eError (*uartRxCallback)(uint8_t);
 typedef eError (*uartTxCallback)(uint8_t);
 
+typedef struct
+{
+	CircularBuffer rxBuffer;
+	CircularBuffer txBuffer;
+} tUartContext;
 
-typedef struct sUartInstanceMap
+typedef struct
 {
     USART_TypeDef*  port;           /**< @brief ST HAL UART port structure */
     uint32_t        baudRate;       /**< @brief speed of the UART port */
@@ -49,33 +54,13 @@ typedef struct sUartInstanceMap
 } tUartInstanceMap;
 
 
-typedef struct sUartContext
-{
-	tCircularBuffer rxBuffer;
-	tCircularBuffer txBuffer;
-} tUartContext;
 
-/****************************************************************************
- *    PUBLIC FUNCTION DEFINITIONS
- ****************************************************************************/
 eError uartInit(void);
 eError uartStop(void);
 eError uartStart(void);
-eError uartSleep(void);
-eError uartWake(void);
+eError uartSetBufferSize(eUart  uartPort, uint32_t bufferSize );
+uint32_t uartGetBufferSize(eUart  uartPort);
+eError uartWrite(eUart  uartPort, uint8_t* buffer);
+eError uartRead(eUart  uartPort, uint8_t* buffer);
 
-//HREG SIZE functions
-eError uartSetBufferSize(tUart uartPort, uint32_t bufferSize );
-uint32_t uartGetBufferSize(tUart uartPort);
-
-//HREG DATA functions
-eError uartWrite(tUart uartPort, uint8_t* buffer);
-eError uartRead(tUart uartPort, uint8_t* buffer);
-
-//HREG STATUS functions
-eError uartStatus(tUart uartPort);
-
-//Interrupt Handler
-void uartIRQHandler(tUart uartPort);
-
-#endif // _UART_H_
+#endif // HAL_UART_BASE_UART_H_
