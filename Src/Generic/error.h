@@ -1,48 +1,19 @@
-/*************************************************************************//**
- * @file error.h
- *
- * @brief Define common error of architecture.
- *
- * This file must be included in all files of the project.
- *
- * @author Rubén Rodríguez
- *
- * @date 14/2/2012
- *
- ****************************************************************************/
 
 #ifndef __ERROR_H__
 #define __ERROR_H__
 
-/****************************************************************************
- *  INCLUDES
- ****************************************************************************/
 
-/****************************************************************************
- *  DEFINES
- ****************************************************************************/
-
-/****************************************************************************
- *  TYPE DEFINITIONS
- ****************************************************************************/
 typedef enum
 {
-	RET_OK,
-	RET_FAIL,
-    RET_NOT_INITIALIZED,
-	RET_NO_CHANGE,
-	RET_INVALID_COMMAND,
-	RET_INVALID_PARAMETER,
-	RET_BAD_POINTER_ADDRESS,
-	RET_BUFFER_EMPTY,
-	RET_BUFFER_FULL,
-    RET_BUSY,
+	RESULT_OK,
+	RESULT_FAIL,
+    RESULT_NOT_INITIALIZED,
+	RESULT_BUFFER_EMPTY,
+	RESULT_BUFFER_FULL,
+    RESULT_BUSY,
 
-	NUM_OF_RET_ERRORS
+	NUM_OF_RESULT_ERRORS
 } eError;
 
-#endif /* __ERROR_H__ */
+#endif
 
-/****************************************************************************
- *    End of file
- ***************************************************************************/

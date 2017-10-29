@@ -54,7 +54,7 @@ typedef struct
 } tUartInstanceMap;
 
 
-
+void uartInterruptHandler(eUart uartPort);
 eError uartInit(void);
 eError uartStop(void);
 eError uartStart(void);

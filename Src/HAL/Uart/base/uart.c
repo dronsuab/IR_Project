@@ -19,9 +19,18 @@ eError uartStatusList[NUM_OF_UART];
 uint8_t RxBufferbyte;
 
 
+void uartInterruptHandler(eUart uartPort)
+{
+    USART_HandleTypeDef* uart_instance; //HAL Uart
+    //en caso de usar las callbacks, revisar el código de MTG
+    uart_instance = &uartHandlers[uartPort];
+    HAL_USART_IRQHandler(uart_instance);
+}
+
+
 eError uartInit(void)
 {
-    eError result = RET_OK;
+    eError result = RESULT_OK;
     USART_HandleTypeDef* uart_handler;
     const tUartInstanceMap* uart_instance;
     uint8_t i;
@@ -52,7 +61,7 @@ eError uartInit(void)
 
 eError uartStop(void)
 {
-    eError result = RET_OK;
+    eError result = RESULT_OK;
     uint8_t i;
     USART_HandleTypeDef* uart_handler;
 
@@ -60,7 +69,7 @@ eError uartStop(void)
         uart_handler = &uartHandlers[i];
         if(HAL_USART_DeInit(uart_handler) != HAL_OK)
         {
-            return RET_FAIL;
+            return RESULT_FAIL;
         }
     }
 
@@ -69,7 +78,7 @@ eError uartStop(void)
 
 eError uartStart(void)
 {
-    eError result = RET_OK;
+    eError result = RESULT_OK;
     uint8_t i;
     USART_HandleTypeDef* uart_handler;
 
@@ -77,11 +86,11 @@ eError uartStart(void)
         uart_handler = &uartHandlers[i];
         if(HAL_USART_DeInit(uart_handler) != HAL_OK)
         {
-            return RET_FAIL;
+            return RESULT_FAIL;
         }
         if(HAL_USART_Init(uart_handler) != HAL_OK)
         {
-            return RET_FAIL;
+            return RESULT_FAIL;
         }
         HAL_USART_Receive_IT(uart_handler, &RxBufferbyte, 1 );
     }
@@ -91,7 +100,7 @@ eError uartStart(void)
 
 eError uartRead(eUart uartPort, uint8_t* buffer)
 {
-    eError result = RET_FAIL;
+    eError result = RESULT_FAIL;
     uint32_t i;
     uint8_t byte;
     uint32_t bufferSize;
@@ -99,20 +108,20 @@ eError uartRead(eUart uartPort, uint8_t* buffer)
     bufferSize = uartBufferSize[uartPort];
 
     if(GetFIFOPendingBytes(&uartCircularBuffers[uartPort].rxBuffer) < bufferSize ){
-        result =  RET_FAIL;
+        result =  RESULT_FAIL;
     }else{
         for(i=0; i<bufferSize; i++){
             byte = GetFIFOByte(&uartCircularBuffers[uartPort].rxBuffer);
             buffer[i] = byte;
         }
-        result = RET_OK;
+        result = RESULT_OK;
     }
     return result;
 }
 
 eError uartWrite(eUart uartPort, uint8_t* buffer)
 {
-    eError result = RET_OK;
+    eError result = RESULT_OK;
     uint32_t i;
     uint8_t byte = 0;
     uint32_t bufferSize;
@@ -120,11 +129,11 @@ eError uartWrite(eUart uartPort, uint8_t* buffer)
     bufferSize = uartBufferSize[uartPort];
 
     if(bufferSize == 0){
-        return RET_INVALID_PARAMETER;
+        return RESULT_FAIL;
     }
 
     if(GetFIFOFreeBytes(&uartCircularBuffers[uartPort].txBuffer) < bufferSize){
-	   return RET_BUFFER_FULL;
+	   return RESULT_BUFFER_FULL;
    }
 
    for(i = 0; i < bufferSize; i++){
@@ -148,7 +157,7 @@ uint32_t uartGetBufferSize(eUart uartPort)
 
 eError uartSetBufferSize(eUart uartPort, uint32_t bufferSize )
 {
-    eError result = RET_OK;
+    eError result = RESULT_OK;
     uartBufferSize[uartPort] = bufferSize;
     return result;
 }

@@ -14,15 +14,15 @@
 #define GPIO_AF_NONE		0xFF
 
 
-typedef enum eGPIOValue
+typedef enum
 {
 	GPIO_LOW,
 	GPIO_HIGH,
 	GPIO_TOGGLE,
 	GPIO_DEFAULT
-} tGPIOValue;
+} eGPIOValue;
 
-typedef struct sGPIOInstanceMap
+typedef struct
 {
 	GPIO_TypeDef*	  	port;
 	uint16_t 			pin;
@@ -30,7 +30,7 @@ typedef struct sGPIOInstanceMap
 	uint8_t				speed;
 	uint8_t    			pupd;
 	uint8_t				alternate;
-	tGPIOValue			initialValue;
+	eGPIOValue			initialValue;
 } tGPIOInstanceMap;
 
 
@@ -42,8 +42,8 @@ eError GPIOStop( void );
 eError GPIOStart( void );
 eError GPIOSleep( void );
 eError GPIOWake( void );
-eError GPIOWritePort(tGPIO port, tGPIOValue value);
-eError GPIOReadPort(tGPIO port,  tGPIOValue *value);
+eError GPIOWrite(eGPIO port, eGPIOValue value);
+eError GPIORead(eGPIO port,  eGPIOValue *value);
 
 
 /****************************************************************************
