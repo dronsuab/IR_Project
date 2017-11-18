@@ -38,6 +38,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32f0xx_hal.h"
+#include "common.h"
+#include "GPIO.h"
 
 /* USER CODE BEGIN Includes */
 
@@ -104,6 +106,8 @@ int main(void)
   MX_SPI1_Init();
   MX_ADC_Init();
   MX_CRC_Init();
+  GPIOInit();
+
 
   /* USER CODE BEGIN 2 */
 
@@ -114,6 +118,8 @@ int main(void)
   while (1)
   {
   /* USER CODE END WHILE */
+	  GPIOWrite(GPIO_LED_3, GPIO_TOGGLE);
+	  GPIOWrite(GPIO_LED_4, GPIO_HIGH);
 
   /* USER CODE BEGIN 3 */
 

@@ -131,6 +131,8 @@ HAL_StatusTypeDef uartWrite(eUart uartPort, uint8_t* buffer)
 			 HAL_USART_Transmit_IT(&uartHandlers[uartPort], &byte, 1);
 			 return HAL_OK;
 		    }
+		    else
+		    	return HAL_ERROR;
 		}
 		else
 			return HAL_ERROR;

@@ -1,4 +1,4 @@
 GPIO.c:15:6:InitGPIOClock	24	static
-GPIO.c:88:8:GPIOWrite	8	static
-GPIO.c:51:8:GPIOInit	40	static
-GPIO.c:111:8:GPIORead	8	static
+GPIO.c:79:6:GPIOWrite	8	static
+GPIO.c:51:6:GPIOInit	40	static
+GPIO.c:98:12:GPIORead	8	static

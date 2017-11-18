@@ -10,7 +10,8 @@
 
 #include "common.h"
 #include "UART_map.h"
-#include "CircularBuffer.h"
+
+#include "../../../CircularBuffer/base/CircularBuffer.h"
 
 
 #define MAX_UART_BUFFER_SIZE    256
