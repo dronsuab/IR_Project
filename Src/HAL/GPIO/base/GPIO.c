@@ -48,9 +48,8 @@ void InitGPIOClock(eGPIO port)
 }
 
 
-eError GPIOInit( void )
+void GPIOInit( void )
 {
-	eError 				result = RESULT_OK;
 	uint8_t 			port;
 	GPIO_InitTypeDef  	GPIO_InitStructure;
 
@@ -71,50 +70,30 @@ eError GPIOInit( void )
 		/* Set GPIO initial value */
 		if ( GPIOInstanceMap[port].initialValue != GPIO_DEFAULT )
 		{
-			result = GPIOWrite(port, GPIOInstanceMap[port].initialValue);
+			GPIOWrite(port, GPIOInstanceMap[port].initialValue);
 		}
 		/* No else needed */
 	}
-
-	return result;
 }
 
-/*************************************************************************//**
- * @brief  	Writes GPIO port with desired value.
- * @param	port to write.
- * @param   value
- * @return  success.
- ****************************************************************************/
-eError GPIOWrite(eGPIO port, eGPIOValue value)
+void GPIOWrite(eGPIO port, eGPIOValue value)
 {
-	eError 	result = RESULT_OK;
-
-	if ( value == GPIO_DEFAULT )
+	if ( value != GPIO_DEFAULT )
 	{
-		result = RESULT_FAIL;
-		return result;
+		if ( value != GPIO_TOGGLE )
+		{
+			HAL_GPIO_WritePin(GPIOInstanceMap[port].port, GPIOInstanceMap[port].pin, value);
+		}
+		else
+		{
+			HAL_GPIO_TogglePin(GPIOInstanceMap[port].port, GPIOInstanceMap[port].pin);
+		}
 	}
-
-
-	if ( value != GPIO_TOGGLE )
-	{
-		HAL_GPIO_WritePin(GPIOInstanceMap[port].port, GPIOInstanceMap[port].pin, value);
-	}
-	else
-	{
-		HAL_GPIO_TogglePin(GPIOInstanceMap[port].port, GPIOInstanceMap[port].pin);
-	}
-
-	return result;
 }
 
-eError GPIORead(eGPIO port,  eGPIOValue *value)
+eGPIOValue GPIORead(eGPIO port)
 {
-	eError 	result = RESULT_OK;
-
-	*value = HAL_GPIO_ReadPin(GPIOInstanceMap[port].port, GPIOInstanceMap[port].pin);
-
-	return result;
+	return HAL_GPIO_ReadPin(GPIOInstanceMap[port].port, GPIOInstanceMap[port].pin);
 }
 
 

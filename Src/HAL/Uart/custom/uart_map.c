@@ -10,8 +10,8 @@
 #include "uart.h"
 #include "uart_map.h"
 
-extern eError testRxCallback(uint8_t c);
-extern eError testTxCallback(uint8_t c);
+extern HAL_StatusTypeDef testRxCallback(uint8_t c);
+extern HAL_StatusTypeDef testTxCallback(uint8_t c);
 
 #ifdef IS_UART1
     uint8_t usart1TxBuffer[USART1_TX_BUFFER];

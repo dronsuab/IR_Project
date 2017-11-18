@@ -1,16 +1,13 @@
 
 
 
-/****************************************************************************
- *  INCLUDES
- ***************************************************************************/
+#ifndef HAL_GPIO_BASE_H_
+#define HAL_GPIO_BASE_H_
 
 #include "common.h"
 #include "GPIO_map.h"
 
-/****************************************************************************
- * DEFINES
- ****************************************************************************/
+
 #define GPIO_AF_NONE		0xFF
 
 
@@ -34,18 +31,10 @@ typedef struct
 } tGPIOInstanceMap;
 
 
-/****************************************************************************
- *    PUBLIC FUNCTION DEFINITIONS
- ****************************************************************************/
-eError GPIOInit( void );
-eError GPIOStop( void );
-eError GPIOStart( void );
-eError GPIOSleep( void );
-eError GPIOWake( void );
-eError GPIOWrite(eGPIO port, eGPIOValue value);
-eError GPIORead(eGPIO port,  eGPIOValue *value);
+void GPIOInit( void );
+void GPIOWrite(eGPIO port, eGPIOValue value);
+eGPIOValue GPIORead(eGPIO port);
 
 
-/****************************************************************************
- *    End of file
- ***************************************************************************/
+#endif /* HAL_GPIO_BASE_H_ */
+

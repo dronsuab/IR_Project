@@ -20,8 +20,8 @@
  * Generic callback for a defined UART. It expects an uint8_t parameter
  * and returns eError.
  */
-typedef eError (*uartRxCallback)(uint8_t);
-typedef eError (*uartTxCallback)(uint8_t);
+typedef HAL_StatusTypeDef (*uartRxCallback)(uint8_t);
+typedef HAL_StatusTypeDef (*uartTxCallback)(uint8_t);
 
 typedef struct
 {
@@ -55,12 +55,12 @@ typedef struct
 
 
 void uartInterruptHandler(eUart uartPort);
-eError uartInit(void);
-eError uartStop(void);
-eError uartStart(void);
-eError uartSetBufferSize(eUart  uartPort, uint32_t bufferSize );
+void uartInit(void);
+HAL_StatusTypeDef uartStop(void);
+HAL_StatusTypeDef uartStart(void);
+void uartSetBufferSize(eUart  uartPort, uint32_t bufferSize );
 uint32_t uartGetBufferSize(eUart  uartPort);
-eError uartWrite(eUart  uartPort, uint8_t* buffer);
-eError uartRead(eUart  uartPort, uint8_t* buffer);
+HAL_StatusTypeDef uartWrite(eUart  uartPort, uint8_t* buffer);
+HAL_StatusTypeDef uartRead(eUart  uartPort, uint8_t* buffer);
 
 #endif // HAL_UART_BASE_UART_H_

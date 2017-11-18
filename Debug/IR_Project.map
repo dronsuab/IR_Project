@@ -26,7 +26,6 @@ pFlash              0x20              Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx
 usart1TxBuffer      0x100             Src\HAL\Uart\custom\uart_map.o
 uartHandlers        0x90              Src\HAL\Uart\base\uart.o
 usart2RxBuffer      0x64              Src\HAL\Uart\custom\uart_map.o
-uartStatusList      0x2               Src\HAL\Uart\base\uart.o
 usart2TxBuffer      0x404             Src\HAL\Uart\custom\uart_map.o
 uartBufferSize      0x8               Src\HAL\Uart\base\uart.o
 usart1RxBuffer      0x64              Src\HAL\Uart\custom\uart_map.o
@@ -836,21 +835,21 @@ Discarded input sections
  .text.InitGPIOClock
                 0x00000000       0xb0 Src\HAL\GPIO\base\GPIO.o
  .text.GPIOWrite
-                0x00000000       0x34 Src\HAL\GPIO\base\GPIO.o
+                0x00000000       0x2c Src\HAL\GPIO\base\GPIO.o
  .text.GPIOInit
-                0x00000000       0x50 Src\HAL\GPIO\base\GPIO.o
+                0x00000000       0x48 Src\HAL\GPIO\base\GPIO.o
  .text.GPIORead
-                0x00000000       0x1c Src\HAL\GPIO\base\GPIO.o
- .debug_info    0x00000000      0xe88 Src\HAL\GPIO\base\GPIO.o
- .debug_abbrev  0x00000000      0x2c5 Src\HAL\GPIO\base\GPIO.o
- .debug_loc     0x00000000      0x112 Src\HAL\GPIO\base\GPIO.o
+                0x00000000       0x18 Src\HAL\GPIO\base\GPIO.o
+ .debug_info    0x00000000      0xdf6 Src\HAL\GPIO\base\GPIO.o
+ .debug_abbrev  0x00000000      0x287 Src\HAL\GPIO\base\GPIO.o
+ .debug_loc     0x00000000       0xc7 Src\HAL\GPIO\base\GPIO.o
  .debug_aranges
                 0x00000000       0x38 Src\HAL\GPIO\base\GPIO.o
- .debug_ranges  0x00000000       0x40 Src\HAL\GPIO\base\GPIO.o
- .debug_line    0x00000000      0x347 Src\HAL\GPIO\base\GPIO.o
- .debug_str     0x00000000      0x8df Src\HAL\GPIO\base\GPIO.o
+ .debug_ranges  0x00000000       0x28 Src\HAL\GPIO\base\GPIO.o
+ .debug_line    0x00000000      0x305 Src\HAL\GPIO\base\GPIO.o
+ .debug_str     0x00000000      0x85c Src\HAL\GPIO\base\GPIO.o
  .comment       0x00000000       0x7d Src\HAL\GPIO\base\GPIO.o
- .debug_frame   0x00000000       0x74 Src\HAL\GPIO\base\GPIO.o
+ .debug_frame   0x00000000       0x70 Src\HAL\GPIO\base\GPIO.o
  .ARM.attributes
                 0x00000000       0x31 Src\HAL\GPIO\base\GPIO.o
  .text          0x00000000        0x0 Src\HAL\GPIO\custom\GPIO_map.o
@@ -873,7 +872,7 @@ Discarded input sections
  .text.uartInterruptHandler
                 0x00000000       0x18 Src\HAL\Uart\base\uart.o
  .text.uartInit
-                0x00000000       0x88 Src\HAL\Uart\base\uart.o
+                0x00000000       0x84 Src\HAL\Uart\base\uart.o
  .text.uartStop
                 0x00000000       0x28 Src\HAL\Uart\base\uart.o
  .text.uartStart
@@ -881,35 +880,35 @@ Discarded input sections
  .text.uartRead
                 0x00000000       0x40 Src\HAL\Uart\base\uart.o
  .text.uartWrite
-                0x00000000       0x74 Src\HAL\Uart\base\uart.o
+                0x00000000       0x6c Src\HAL\Uart\base\uart.o
  .text.uartGetBufferSize
                 0x00000000       0x18 Src\HAL\Uart\base\uart.o
  .text.uartSetBufferSize
-                0x00000000       0x10 Src\HAL\Uart\base\uart.o
- .debug_info    0x00000000     0x14c5 Src\HAL\Uart\base\uart.o
- .debug_abbrev  0x00000000      0x28d Src\HAL\Uart\base\uart.o
- .debug_loc     0x00000000      0x309 Src\HAL\Uart\base\uart.o
+                0x00000000        0xc Src\HAL\Uart\base\uart.o
+ .debug_info    0x00000000     0x141a Src\HAL\Uart\base\uart.o
+ .debug_abbrev  0x00000000      0x27e Src\HAL\Uart\base\uart.o
+ .debug_loc     0x00000000      0x301 Src\HAL\Uart\base\uart.o
  .debug_aranges
                 0x00000000       0x58 Src\HAL\Uart\base\uart.o
  .debug_ranges  0x00000000       0x48 Src\HAL\Uart\base\uart.o
- .debug_line    0x00000000      0x454 Src\HAL\Uart\base\uart.o
- .debug_str     0x00000000      0xd28 Src\HAL\Uart\base\uart.o
+ .debug_line    0x00000000      0x408 Src\HAL\Uart\base\uart.o
+ .debug_str     0x00000000      0xca8 Src\HAL\Uart\base\uart.o
  .comment       0x00000000       0x7d Src\HAL\Uart\base\uart.o
- .debug_frame   0x00000000       0xdc Src\HAL\Uart\base\uart.o
+ .debug_frame   0x00000000       0xe0 Src\HAL\Uart\base\uart.o
  .ARM.attributes
                 0x00000000       0x31 Src\HAL\Uart\base\uart.o
- COMMON         0x00000000       0xd0 Src\HAL\Uart\base\uart.o
+ COMMON         0x00000000       0xcc Src\HAL\Uart\base\uart.o
  .text          0x00000000        0x0 Src\HAL\Uart\custom\uart_map.o
  .data          0x00000000        0x0 Src\HAL\Uart\custom\uart_map.o
  .bss           0x00000000        0x0 Src\HAL\Uart\custom\uart_map.o
  .rodata.UARTInstanceMap
                 0x00000000       0x58 Src\HAL\Uart\custom\uart_map.o
- .debug_info    0x00000000      0xbdf Src\HAL\Uart\custom\uart_map.o
+ .debug_info    0x00000000      0xbcd Src\HAL\Uart\custom\uart_map.o
  .debug_abbrev  0x00000000      0x1a4 Src\HAL\Uart\custom\uart_map.o
  .debug_aranges
                 0x00000000       0x18 Src\HAL\Uart\custom\uart_map.o
- .debug_line    0x00000000      0x2ca Src\HAL\Uart\custom\uart_map.o
- .debug_str     0x00000000      0x7de Src\HAL\Uart\custom\uart_map.o
+ .debug_line    0x00000000      0x2cb Src\HAL\Uart\custom\uart_map.o
+ .debug_str     0x00000000      0x79a Src\HAL\Uart\custom\uart_map.o
  .comment       0x00000000       0x7d Src\HAL\Uart\custom\uart_map.o
  .ARM.attributes
                 0x00000000       0x31 Src\HAL\Uart\custom\uart_map.o
