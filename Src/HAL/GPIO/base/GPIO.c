@@ -86,11 +86,12 @@ void GPIOWrite(eGPIO port, eGPIOValue value)
 		}
 		else
 		{
-			  GPIOWrite(port, GPIO_HIGH);
-			  HAL_Delay(200);
-			  GPIOWrite(port, GPIO_LOW);
-			  HAL_Delay(200);
-			//HAL_GPIO_TogglePin(GPIOInstanceMap[port].port, GPIOInstanceMap[port].pin);
+//			  GPIOWrite(port, GPIO_HIGH);
+//			  HAL_Delay(200);
+//			  GPIOWrite(port, GPIO_LOW);
+//			  HAL_Delay(200);
+			HAL_GPIO_TogglePin(GPIOInstanceMap[port].port, GPIOInstanceMap[port].pin);
+			HAL_Delay(100);
 		}
 	}
 }

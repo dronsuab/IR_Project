@@ -40,6 +40,8 @@
 #include "stm32f0xx_hal.h"
 #include "common.h"
 #include "GPIO.h"
+#include "uart.h"
+
 
 /* USER CODE BEGIN Includes */
 
@@ -107,6 +109,11 @@ int main(void)
   MX_ADC_Init();
   MX_CRC_Init();
   GPIOInit();
+  uartInit();
+  HAL_StatusTypeDef error;
+  uint8_t buffer[128] = {0,1,2,3,4,5};
+
+
 
 
   /* USER CODE BEGIN 2 */
@@ -118,11 +125,13 @@ int main(void)
   while (1)
   {
   /* USER CODE END WHILE */
-	  GPIOWrite(GPIO_LED_3, GPIO_TOGGLE);
-	  GPIOWrite(GPIO_LED_4, GPIO_HIGH);
 
   /* USER CODE BEGIN 3 */
-
+	  if ( uartWrite(UART_2, buffer) == HAL_OK){
+		  GPIOWrite(GPIO_LED_3, GPIO_TOGGLE);
+	  }
+	  else
+		  GPIOWrite(GPIO_LED_4, GPIO_HIGH);
   }
   /* USER CODE END 3 */
 

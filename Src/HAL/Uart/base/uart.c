@@ -97,7 +97,7 @@ HAL_StatusTypeDef uartRead(eUart uartPort, uint8_t* buffer)
     uint8_t byte;
     uint32_t bufferSize;
 
-    bufferSize = uartBufferSize[uartPort];
+    bufferSize = UARTInstanceMap[uartPort].txBufferSize;
 
     if(GetFIFOPendingBytes(&uartCircularBuffers[uartPort].rxBuffer) < bufferSize ){
         return HAL_ERROR;
@@ -116,7 +116,7 @@ HAL_StatusTypeDef uartWrite(eUart uartPort, uint8_t* buffer)
     uint8_t byte = 0;
     uint32_t bufferSize;
 
-    bufferSize = uartBufferSize[uartPort];
+    bufferSize = 50;
 
     if(bufferSize != 0){
 
