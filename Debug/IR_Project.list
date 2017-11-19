@@ -1,5 +1,5 @@
 
-C:\Users\Iván\Documents\TFG\IR_Project-SerialPort\Debug\IR_Project.elf:     file format elf32-littlearm
+C:\Users\Iván\Documents\TFG\IR_Project\Debug\IR_Project.elf:     file format elf32-littlearm
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
@@ -21,23 +21,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
   8 .ARM.attributes 00000028  00000000  00000000  00020004  2**0
                   CONTENTS, READONLY
-  9 .debug_info   00015153  00000000  00000000  0002002c  2**0
+  9 .debug_info   00015148  00000000  00000000  0002002c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_abbrev 00002fc9  00000000  00000000  0003517f  2**0
+ 10 .debug_abbrev 00002fc9  00000000  00000000  00035174  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    00005303  00000000  00000000  00038148  2**0
+ 11 .debug_loc    00005303  00000000  00000000  0003813d  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_aranges 00000860  00000000  00000000  0003d450  2**3
+ 12 .debug_aranges 00000860  00000000  00000000  0003d440  2**3
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_ranges 00000a60  00000000  00000000  0003dcb0  2**3
+ 13 .debug_ranges 00000a60  00000000  00000000  0003dca0  2**3
                   CONTENTS, READONLY, DEBUGGING
- 14 .debug_line   00005f7f  00000000  00000000  0003e710  2**0
+ 14 .debug_line   00005edc  00000000  00000000  0003e700  2**0
                   CONTENTS, READONLY, DEBUGGING
- 15 .debug_str    00002eee  00000000  00000000  0004468f  2**0
+ 15 .debug_str    00002ee3  00000000  00000000  000445dc  2**0
                   CONTENTS, READONLY, DEBUGGING
- 16 .comment      0000007c  00000000  00000000  0004757d  2**0
+ 16 .comment      0000007c  00000000  00000000  000474bf  2**0
                   CONTENTS, READONLY
- 17 .debug_frame  00001710  00000000  00000000  000475fc  2**2
+ 17 .debug_frame  00001710  00000000  00000000  0004753c  2**2
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
