@@ -11,27 +11,35 @@
 
 
 extern const tUartInstanceMap UARTInstanceMap[NUM_OF_UART];
-
-uint32_t uartBufferSize[NUM_OF_UART];
-USART_HandleTypeDef uartHandlers[NUM_OF_UART];
+UART_HandleTypeDef uartHandlers[NUM_OF_UART];
 tUartContext uartCircularBuffers[NUM_OF_UART];
-uint8_t RxBufferbyte;
+
+
 
 
 void uartInterruptHandler(eUart uartPort)
 {
-    USART_HandleTypeDef* uart_instance; //HAL Uart
+    UART_HandleTypeDef* uart_instance; //HAL Uart
     //en caso de usar las callbacks, revisar el código de MTG
     uart_instance = &uartHandlers[uartPort];
-    HAL_USART_IRQHandler(uart_instance);
+    HAL_UART_IRQHandler(uart_instance);
 }
 
 
 void uartInit(void)
 {
-    USART_HandleTypeDef* uart_handler;
+    UART_HandleTypeDef* uart_handler;
     const tUartInstanceMap* uart_instance;
     uint8_t i;
+    UART_TX_CP = 1;
+    UART_RX_CP = 1;
+
+	#ifdef IS_UART1
+        __HAL_RCC_USART1_CLK_ENABLE();
+	#endif
+	#ifdef IS_UART1
+        __HAL_RCC_USART2_CLK_ENABLE();
+	#endif
 
     for(i=0; i<NUM_OF_UART; i++) {
         uart_handler = &uartHandlers[i];
@@ -41,8 +49,12 @@ void uartInit(void)
         uart_handler->Init.WordLength = uart_instance->dataSize;
         uart_handler->Init.StopBits   = uart_instance->stopBits;
         uart_handler->Init.Parity     = uart_instance->parity;
-        uart_handler->Init.Mode       = USART_MODE_TX_RX;
+        uart_handler->Init.HwFlowCtl  = UART_HWCONTROL_NONE;
+        uart_handler->Init.Mode       = UART_MODE_TX_RX;
+        uart_handler->AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
         //se pueden añadir los parámetros Init.CLKPolarity, Init.CLKPhase e Init.CLKLastBit
+
+        __HAL_UART_ENABLE_IT(uart_handler, UART_IT_RXNE);
 
 		CreateFIFO(&uartCircularBuffers[i].rxBuffer,
                 UARTInstanceMap[i].rxBufferPtr,
@@ -51,18 +63,26 @@ void uartInit(void)
 		CreateFIFO(&uartCircularBuffers[i].txBuffer,
                 UARTInstanceMap[i].txBufferPtr,
                 UARTInstanceMap[i].txBufferSize);
-
     }
 }
 
 HAL_StatusTypeDef uartStop(void)
 {
     uint8_t i;
-    USART_HandleTypeDef* uart_handler;
+    UART_HandleTypeDef* uart_handler;
 
     for(i=0; i<NUM_OF_UART; i++){
         uart_handler = &uartHandlers[i];
-        if(HAL_USART_DeInit(uart_handler) != HAL_OK)
+
+        if(uart_handler->Instance == USART1){
+            __HAL_RCC_USART1_FORCE_RESET();
+            __HAL_RCC_USART1_RELEASE_RESET();
+        }
+        else if (uart_handler->Instance == USART2){
+            __HAL_RCC_USART2_FORCE_RESET();
+            __HAL_RCC_USART2_RELEASE_RESET();
+        }
+        if(HAL_UART_DeInit(uart_handler) != HAL_OK)
         {
             return HAL_ERROR;
         }
@@ -74,71 +94,65 @@ HAL_StatusTypeDef uartStop(void)
 HAL_StatusTypeDef uartStart(void)
 {
     uint8_t i;
-    USART_HandleTypeDef* uart_handler;
+    UART_HandleTypeDef* uart_handler;
 
     for(i=0; i<NUM_OF_UART; i++){
         uart_handler = &uartHandlers[i];
-        if(HAL_USART_DeInit(uart_handler) != HAL_OK)
+        if(HAL_UART_DeInit(uart_handler) != HAL_OK)
         {
             return HAL_ERROR;
         }
-        if(HAL_USART_Init(uart_handler) != HAL_OK)
+        if(HAL_UART_Init(uart_handler) != HAL_OK)
         {
             return HAL_ERROR;
-        }
-        HAL_USART_Receive_IT(uart_handler, &RxBufferbyte, 1 );
-    }
-    return HAL_OK;
-}
-
-HAL_StatusTypeDef uartRead(eUart uartPort, uint8_t* buffer)
-{
-    uint32_t i;
-    uint8_t byte;
-    uint32_t bufferSize;
-
-    bufferSize = UARTInstanceMap[uartPort].txBufferSize;
-
-    if(GetFIFOPendingBytes(&uartCircularBuffers[uartPort].rxBuffer) < bufferSize ){
-        return HAL_ERROR;
-    }else{
-        for(i=0; i<bufferSize; i++){
-            byte = GetFIFOByte(&uartCircularBuffers[uartPort].rxBuffer);
-            buffer[i] = byte;
         }
     }
     return HAL_OK;
 }
 
-HAL_StatusTypeDef uartWrite(eUart uartPort, uint8_t* buffer)
+HAL_StatusTypeDef uartRead(eUart uartPort, char* buffer)
 {
-    uint32_t i;
-    uint8_t byte = 0;
-    uint32_t bufferSize;
+//    uint32_t i;
+//    uint8_t byte;
+//    uint8_t buffersize;
 
-    bufferSize = 50;
+    HAL_UART_Receive_IT(&uartHandlers[uartPort], (uint8_t*)buffer, 1);
 
-    if(bufferSize != 0){
+//    buffersize = GetFIFOPendingBytes(&uartCircularBuffers[uartPort].rxBuffer);
+//    if(buffersize <= 0 ){
+//        return HAL_ERROR;
+//    }else{
+//        for(i=0; i<buffersize; i++){
+//            byte = GetFIFOByte(&uartCircularBuffers[uartPort].rxBuffer);
+//            buffer[i] = (char)byte;
+//        }
+//    }
+    return HAL_OK;
+}
 
-		if(GetFIFOFreeBytes(&uartCircularBuffers[uartPort].txBuffer) > bufferSize){
+HAL_StatusTypeDef uartWrite(eUart uartPort, char* buffer)
+{
+    HAL_StatusTypeDef error;
+    error = HAL_UART_Transmit_IT(&uartHandlers[uartPort], (uint8_t*)buffer, strlen(buffer));
+    while (HAL_UART_GetState(&uartHandlers[uartPort]) == HAL_UART_STATE_BUSY_TX ||
+    HAL_UART_GetState(&uartHandlers[uartPort]) == HAL_UART_STATE_BUSY_TX_RX);
+    return error;
 
-			for(i = 0; i < bufferSize; i++){
-				AddFIFOByte(&uartCircularBuffers[uartPort].txBuffer, buffer[i]);
-			}
+}
 
-		    if ( GetFIFOPendingBytes(&uartCircularBuffers[uartPort].txBuffer) > 0)
-		    {
-			 HAL_USART_Transmit_IT(&uartHandlers[uartPort], &byte, 1);
-			 return HAL_OK;
-		    }
-		    else
-		    	return HAL_ERROR;
-		}
-		else
-			return HAL_ERROR;
-    }
-    else
-    	return HAL_ERROR;
+HAL_StatusTypeDef uartDriverWritePolling(eUart uartPort, char* buffer)
+{
+    return HAL_UART_Transmit(&uartHandlers[uartPort], (uint8_t*)buffer, strlen(buffer), HAL_MAX_DELAY);
+}
+
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+{
+	UART_TX_CP = 0;
+}
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+	UART_RX_CP = 1;
 }
 
 uint32_t uartGetBufferSize(eUart uartPort)
@@ -147,8 +161,4 @@ uint32_t uartGetBufferSize(eUart uartPort)
     return bufferSize;
 }
 
-void uartSetBufferSize(eUart uartPort, uint32_t bufferSize )
-{
-    uartBufferSize[uartPort] = bufferSize;
-}
 

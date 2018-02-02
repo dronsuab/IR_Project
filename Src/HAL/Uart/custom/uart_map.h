@@ -14,9 +14,6 @@
 
 #define UART_TX_BUFFER 100
 
-#define IS_UART1
-#define IS_UART2
-
 
 #ifdef IS_UART1
 #define USART1_TX_BUFFER          256
@@ -36,14 +33,12 @@
 
 typedef enum
 {
-    UART_INIT = -1,
 #ifdef IS_UART1
     UART_1,
 #endif
 #ifdef IS_UART2
     UART_2,
 #endif
-
     NUM_OF_UART
 } eUart;
 

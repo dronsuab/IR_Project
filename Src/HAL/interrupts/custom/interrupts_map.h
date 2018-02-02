@@ -19,8 +19,9 @@ typedef enum
 
 } eInterrupts;
 
-void HAL_UART2_IRQ(void);
+
 void HAL_UART1_IRQ(void);
+void HAL_UART2_IRQ(void);
 
 
 #endif /* HAL_INTERRUPTS_CUSTOM_INTERRUPTS_MAP_H_ */

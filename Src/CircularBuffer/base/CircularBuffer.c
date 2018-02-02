@@ -5,7 +5,7 @@
  *      Author: Iván
  */
 
-#include "CircularBuffer.h"
+#include "../../CircularBuffer/base/CircularBuffer.h"
 
 #include "common.h"
 //#include "interrupts.h"

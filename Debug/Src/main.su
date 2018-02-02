@@ -1,3 +1,5 @@
-main.c:142:6:SystemClock_Config	96	static
-main.c:82:5:main	160	static
-main.c:350:6:_Error_Handler	0	static
+main.c:239:6:sendData	112	static
+main.c:259:6:SystemClock_Config	96	static
+main.c:112:5:main	64	static
+main.c:358:6:StartDefaultTask	8	static
+main.c:375:6:_Error_Handler	0	static

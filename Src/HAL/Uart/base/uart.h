@@ -10,6 +10,7 @@
 
 #include "common.h"
 #include "UART_map.h"
+#include "GPIO.h"
 
 #include "../../../CircularBuffer/base/CircularBuffer.h"
 
@@ -21,6 +22,10 @@
  * Generic callback for a defined UART. It expects an uint8_t parameter
  * and returns eError.
  */
+
+uint8_t UART_TX_CP;
+uint8_t UART_RX_CP;
+
 typedef HAL_StatusTypeDef (*uartRxCallback)(uint8_t);
 typedef HAL_StatusTypeDef (*uartTxCallback)(uint8_t);
 
@@ -61,7 +66,8 @@ HAL_StatusTypeDef uartStop(void);
 HAL_StatusTypeDef uartStart(void);
 void uartSetBufferSize(eUart  uartPort, uint32_t bufferSize );
 uint32_t uartGetBufferSize(eUart  uartPort);
-HAL_StatusTypeDef uartWrite(eUart  uartPort, uint8_t* buffer);
-HAL_StatusTypeDef uartRead(eUart  uartPort, uint8_t* buffer);
+HAL_StatusTypeDef uartWrite(eUart  uartPort, char* buffer);
+HAL_StatusTypeDef uartDriverWritePolling(eUart uartPort, char* buffer);
+HAL_StatusTypeDef uartRead(eUart  uartPort, char* buffer);
 
 #endif // HAL_UART_BASE_UART_H_

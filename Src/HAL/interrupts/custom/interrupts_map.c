@@ -12,6 +12,7 @@
 #include "common.h"
 #include "interrupts.h"
 #include "interrupts_map.h"
+#include "uart.h"
 
 
 tInterruptsInstanceMap interruptsInstanceMap[NUM_OF_IRQS] =
@@ -26,14 +27,14 @@ tInterruptsInstanceMap interruptsInstanceMap[NUM_OF_IRQS] =
 void HAL_UART1_IRQ(void)
 {
 #ifdef IS_UART1
-   uartDriverMainIRQHandler(UART_1);
+	uartInterruptHandler(UART_1);
 #endif
 }
 
 void HAL_UART2_IRQ(void)
 {
 #ifdef IS_UART2
-   uartIRQHandler(UART_2);
+	uartInterruptHandler(UART_2);
 #endif
 }
 

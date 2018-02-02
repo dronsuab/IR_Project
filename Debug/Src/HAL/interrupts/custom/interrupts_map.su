@@ -1,0 +1,2 @@
+interrupts_map.c:27:6:HAL_UART1_IRQ	8	static
+interrupts_map.c:34:6:HAL_UART2_IRQ	8	static
