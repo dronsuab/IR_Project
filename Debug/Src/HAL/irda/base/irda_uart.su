@@ -1,0 +1,4 @@
+irda_uart.c:58:19:irda_test1	16	static
+irda_uart.c:76:19:irda_test2	24	static
+irda_uart.c:90:19:irda_test3	0	static
+irda_uart.c:104:6:IrdaStart	8	static

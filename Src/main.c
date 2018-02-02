@@ -9,7 +9,7 @@
   * inserted by the user or by software development tools
   * are owned by their respective copyright owners.
   *
-  * Copyright (c) 2017 STMicroelectronics International N.V. 
+  * Copyright (c) 2018 STMicroelectronics International N.V. 
   * All rights reserved.
   *
   * Redistribution and use in source and binary forms, with or without 
@@ -50,12 +50,16 @@
 #include "stm32f0xx_hal.h"
 #include "cmsis_os.h"
 
+//#include "irda_uart.c"
 /* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
+I2C_HandleTypeDef hi2c1;
+
 IRDA_HandleTypeDef hirda1;
+USART_HandleTypeDef husart2;
 
 osThreadId defaultTaskHandle;
 
@@ -67,9 +71,13 @@ osThreadId defaultTaskHandle;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_I2C1_Init(void);
 static void MX_USART1_IRDA_Init(void);
+static void MX_USART2_Init(void);
 void StartDefaultTask(void const * argument);
+//static void irda_test(void);
 
+xQueueHandle queue;
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
 
@@ -104,7 +112,10 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_I2C1_Init();
   MX_USART1_IRDA_Init();
+  MX_USART2_Init();
+ // IrdaStart();
 
   /* USER CODE BEGIN 2 */
 
@@ -133,26 +144,58 @@ int main(void)
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
+//  queue=xQueueCreate(10, sizeof(int));
   /* USER CODE END RTOS_QUEUES */
- 
+//  xTaskCreate(
+//		  	  HAL_IRDA_Transmit_IT,                 /* Function pointer */
+//    		  "IrdaTransmit",                          /* Task name - for debugging only*/
+//    		  configMINIMAL_STACK_SIZE,         /* Stack depth in words */
+//    		  NULL,                     /* Pointer to tasks arguments (parameter) */
+//    		  tskIDLE_PRIORITY + 1,           /* Task priority*/
+//    		  NULL                              /* Task handle */
+//      );
+
 
   /* Start scheduler */
-  osKernelStart();
-  
+  //osKernelStart();					INICIALIZARLO CUANDO FUNCIONE EL TEST
+
   /* We should never get here as control is now taken by the scheduler */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-  /* USER CODE END WHILE */
+	  HAL_StatusTypeDef TestResult;
+	  uint8_t var =0;
+	  TestResult = irda_test1(&hirda1);
 
-  /* USER CODE BEGIN 3 */
+	  if (irda_test1(&hirda1) != HAL_OK)		//SOLO PARA DEBUG
+		  var=0;
+	  else{
+		  var=1;
+	  }
+
+	  printf("VAR: %d",var);
+
+	  TestResult=irda_test2(&hirda1);
+	  if (TestResult != HAL_OK)		//SOLO PARA DEBUG
+		  var=0;
+	  else{
+		  var=1;
+	  }
+
+	  TestResult=irda_test3(&hirda1);
+	  if (TestResult != HAL_OK)		//SOLO PARA DEBUG
+		  var=0;
+	  else{
+		  var=1;
+	  }
 
   }
   /* USER CODE END 3 */
 
 }
+
 
 /** System Clock Configuration
 */
@@ -187,8 +230,9 @@ void SystemClock_Config(void)
     _Error_Handler(__FILE__, __LINE__);
   }
 
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1|RCC_PERIPHCLK_I2C1;
   PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_PCLK1;
+  PeriphClkInit.I2c1ClockSelection = RCC_I2C1CLKSOURCE_HSI;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
@@ -206,18 +250,80 @@ void SystemClock_Config(void)
   HAL_NVIC_SetPriority(SysTick_IRQn, 3, 0);
 }
 
+/* I2C1 init function */
+static void MX_I2C1_Init(void)
+{
+
+  hi2c1.Instance = I2C1;
+  hi2c1.Init.Timing = 0x2000090E;
+  hi2c1.Init.OwnAddress1 = 0;
+  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c1.Init.OwnAddress2 = 0;
+  hi2c1.Init.OwnAddress2Masks = I2C_OA2_NOMASK;
+  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c1) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+    /**Configure Analogue filter 
+    */
+  if (HAL_I2CEx_ConfigAnalogFilter(&hi2c1, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+    /**Configure Digital filter 
+    */
+  if (HAL_I2CEx_ConfigDigitalFilter(&hi2c1, 0) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+}
+
+
 /* USART1 init function */
 static void MX_USART1_IRDA_Init(void)
 {
 
+	#ifdef IS_UART1
+        __HAL_RCC_USART1_CLK_ENABLE();
+	#endif
+	#ifdef IS_UART1
+        __HAL_RCC_USART2_CLK_ENABLE();
+	#endif
+
   hirda1.Instance = USART1;
-  hirda1.Init.BaudRate = 38400;
+  hirda1.Init.BaudRate = 115200;
   hirda1.Init.WordLength = IRDA_WORDLENGTH_8B;
   hirda1.Init.Parity = IRDA_PARITY_NONE;
   hirda1.Init.Mode = IRDA_MODE_TX_RX;
   hirda1.Init.Prescaler = 10;
-  hirda1.Init.PowerMode = IRDA_POWERMODE_NORMAL;
+  hirda1.Init.PowerMode = IRDA_POWERMODE_NORMAL; //IRDA_POWERMODE_LOWPOWER
   if (HAL_IRDA_Init(&hirda1) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+}
+
+/* USART2 init function */
+static void MX_USART2_Init(void)
+{
+
+  husart2.Instance = USART2;
+  husart2.Init.BaudRate = 38400;
+  husart2.Init.WordLength = USART_WORDLENGTH_8B;
+  husart2.Init.StopBits = USART_STOPBITS_1;
+  husart2.Init.Parity = USART_PARITY_NONE;
+  husart2.Init.Mode = USART_MODE_TX_RX;
+  husart2.Init.CLKPolarity = USART_POLARITY_LOW;
+  husart2.Init.CLKPhase = USART_PHASE_1EDGE;
+  husart2.Init.CLKLastBit = USART_LASTBIT_DISABLE;
+  if (HAL_USART_Init(&husart2) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
@@ -231,6 +337,7 @@ static void MX_GPIO_Init(void)
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
 
 }
 
