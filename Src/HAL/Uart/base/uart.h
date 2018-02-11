@@ -64,8 +64,6 @@ void uartInterruptHandler(eUart uartPort);
 void uartInit(void);
 HAL_StatusTypeDef uartStop(void);
 HAL_StatusTypeDef uartStart(void);
-void uartSetBufferSize(eUart  uartPort, uint32_t bufferSize );
-uint32_t uartGetBufferSize(eUart  uartPort);
 HAL_StatusTypeDef uartWrite(eUart  uartPort, char* buffer);
 HAL_StatusTypeDef uartDriverWritePolling(eUart uartPort, char* buffer);
 HAL_StatusTypeDef uartRead(eUart  uartPort, char* buffer);

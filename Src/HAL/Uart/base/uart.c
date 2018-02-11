@@ -13,8 +13,8 @@
 extern const tUartInstanceMap UARTInstanceMap[NUM_OF_UART];
 UART_HandleTypeDef uartHandlers[NUM_OF_UART];
 tUartContext uartCircularBuffers[NUM_OF_UART];
-
-
+uint8_t RxByte;
+static eUart uartPortIRQ;
 
 
 void uartInterruptHandler(eUart uartPort)
@@ -22,6 +22,7 @@ void uartInterruptHandler(eUart uartPort)
     UART_HandleTypeDef* uart_instance; //HAL Uart
     //en caso de usar las callbacks, revisar el código de MTG
     uart_instance = &uartHandlers[uartPort];
+    uartPortIRQ = uartPort;
     HAL_UART_IRQHandler(uart_instance);
 }
 
@@ -106,28 +107,29 @@ HAL_StatusTypeDef uartStart(void)
         {
             return HAL_ERROR;
         }
+        HAL_UART_Receive_IT(uart_handler, &RxByte, 1 );
     }
     return HAL_OK;
 }
 
 HAL_StatusTypeDef uartRead(eUart uartPort, char* buffer)
 {
-//    uint32_t i;
-//    uint8_t byte;
-//    uint8_t buffersize;
+    uint32_t i;
+    uint8_t byte;
+    uint32_t bufferSize = 5;
+    uint8_t result;
 
-    HAL_UART_Receive_IT(&uartHandlers[uartPort], (uint8_t*)buffer, 1);
+    if(GetFIFOPendingBytes(&uartCircularBuffers[uartPort].rxBuffer) < bufferSize ){
+        result =  HAL_ERROR;
+    }else{
+        for(i=0; i<bufferSize; i++){
+            byte = GetFIFOByte(&uartCircularBuffers[uartPort].rxBuffer);
+            buffer[i] = byte;
+        }
+        result = HAL_OK;
+    }
 
-//    buffersize = GetFIFOPendingBytes(&uartCircularBuffers[uartPort].rxBuffer);
-//    if(buffersize <= 0 ){
-//        return HAL_ERROR;
-//    }else{
-//        for(i=0; i<buffersize; i++){
-//            byte = GetFIFOByte(&uartCircularBuffers[uartPort].rxBuffer);
-//            buffer[i] = (char)byte;
-//        }
-//    }
-    return HAL_OK;
+    return result;
 }
 
 HAL_StatusTypeDef uartWrite(eUart uartPort, char* buffer)
@@ -150,15 +152,17 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 	UART_TX_CP = 0;
 }
 
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *uart_handler)
 {
-	UART_RX_CP = 1;
+
+	if(GetFIFOFreeBytes(&uartCircularBuffers[uartPortIRQ].rxBuffer) > 0){
+		AddFIFOByte(&uartCircularBuffers[uartPortIRQ].rxBuffer, RxByte);
+	}
+
+	 HAL_UART_Receive_IT(uart_handler, &RxByte, 1 );
+
 }
 
-uint32_t uartGetBufferSize(eUart uartPort)
-{
-	uint16_t bufferSize = (GetFIFOPendingBytes(&uartCircularBuffers[uartPort].rxBuffer));
-    return bufferSize;
-}
+
 
 

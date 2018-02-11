@@ -70,6 +70,8 @@ TIM_HandleTypeDef htim1;
 IRDA_HandleTypeDef hirda1;
 UART_HandleTypeDef huart2;
 
+int test = 0;
+
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -200,14 +202,14 @@ int main(void)
   		  NULL                              /* Task handle */
     );
 
-//    xTaskCreate(
-//    	  receiveData,                 /* Function pointer */
-//   		  "receiveData",                          /* Task name - for debugging only*/
-//   		  configMINIMAL_STACK_SIZE,         /* Stack depth in words */
-//   		  NULL,                     /* Pointer to tasks arguments (parameter) */
-//   		  tskIDLE_PRIORITY + 5,           /* Task priority*/
-//   		  NULL                              /* Task handle */
-//     );
+    xTaskCreate(
+    	  receiveData,                 /* Function pointer */
+   		  "receiveData",                          /* Task name - for debugging only*/
+   		  configMINIMAL_STACK_SIZE,         /* Stack depth in words */
+   		  NULL,                     /* Pointer to tasks arguments (parameter) */
+   		  tskIDLE_PRIORITY + 5,           /* Task priority*/
+   		  NULL                              /* Task handle */
+     );
 
     /* Start the RTOS Scheduler */
     vTaskStartScheduler();
@@ -244,12 +246,19 @@ void sendData(void *pvParameters){
 }
 
 void receiveData(void *pvParameters){
-	char buffer[00];
-	if (UART_TX_CP == 1)
-	{
-		UART_TX_CP = 0;
-		uartRead(UART_2, buffer);
+	char buffer[100];
+	char buffercopy[100];
+	while(1){
+		if (uartRead(UART_2, buffer) == HAL_OK)
+		{
+			if (test == 0){
+				test = 1;
+				memcpy(buffercopy, buffer, strlen(buffer) + 1);
+			}
+		}
+		vTaskDelay(1600 / portTICK_RATE_MS);
 	}
+
 }
 /** System Clock Configuration
 */
