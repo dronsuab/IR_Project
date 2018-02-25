@@ -32,8 +32,7 @@ void uartInit(void)
     UART_HandleTypeDef* uart_handler;
     const tUartInstanceMap* uart_instance;
     uint8_t i;
-    UART_TX_CP = 1;
-    UART_RX_CP = 1;
+
 
 	#ifdef IS_UART1
         __HAL_RCC_USART1_CLK_ENABLE();
@@ -112,20 +111,24 @@ HAL_StatusTypeDef uartStart(void)
     return HAL_OK;
 }
 
-HAL_StatusTypeDef uartRead(eUart uartPort, char* buffer)
+HAL_StatusTypeDef uartRead(eUart uartPort, char* buffer, uint8_t lastChar)
 {
-    uint32_t i;
-    uint8_t byte;
-    uint32_t bufferSize = 5;
+    uint32_t i=0;
+    uint8_t byte=0;
+    uint32_t bufferSize = 30;
     uint8_t result;
 
-    if(GetFIFOPendingBytes(&uartCircularBuffers[uartPort].rxBuffer) < bufferSize ){
-        result =  HAL_ERROR;
+    if(GetFIFOPendingBytes(&uartCircularBuffers[uartPort].rxBuffer) < 5 ){
+		initString(buffer,bufferSize);
+		result = HAL_ERROR;
     }else{
-        for(i=0; i<bufferSize; i++){
+        while((byte != lastChar) && (i<bufferSize) )
+        {
             byte = GetFIFOByte(&uartCircularBuffers[uartPort].rxBuffer);
             buffer[i] = byte;
+            i++;
         }
+        ResetFIFO(&uartCircularBuffers[uartPort].rxBuffer);
         result = HAL_OK;
     }
 
@@ -149,7 +152,7 @@ HAL_StatusTypeDef uartDriverWritePolling(eUart uartPort, char* buffer)
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 {
-	UART_TX_CP = 0;
+
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *uart_handler)

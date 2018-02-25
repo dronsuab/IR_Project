@@ -5,8 +5,8 @@
  *      Author: Iván
  */
 
-#ifndef CIRCULARBUFFER_BASE_CIRCULARBUFFER_H_
-#define CIRCULARBUFFER_BASE_CIRCULARBUFFER_H_
+#ifndef TOOLS_CIRCULARBUFFER_CIRCULARBUFFER_H_
+#define TOOLS_CIRCULARBUFFER_CIRCULARBUFFER_H_
 
 #include "common.h"
 
@@ -29,4 +29,4 @@ uint16_t GetFIFOPendingBytes(CircularBuffer* buffer);
 uint16_t GetFIFOFreeBytes(CircularBuffer* buffer);
 
 
-#endif /* CIRCULARBUFFER_BASE_CIRCULARBUFFER_H_ */
+#endif /* TOOLS_CIRCULARBUFFER_CIRCULARBUFFER_H_ */

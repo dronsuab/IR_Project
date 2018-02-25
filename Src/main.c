@@ -60,85 +60,49 @@
 #include "uart.h"
 #include "interrupts.h"
 #include <stdio.h>
+#include "BridgeMode.h"
 
 
+/* Private variables ---------------------------------------------------------*/
+char SerialTXBuffer[50];
+char SerialRXBuffer[50];
+char IrDATXBuffer[50];
+char IrDARXBuffer[50];
 
-/* USER CODE BEGIN Includes */
+tBool UART_TO_IRDA_CP;
+tBool IRDA_TO_UART_CP;
 
 TIM_HandleTypeDef htim1;
-
-IRDA_HandleTypeDef hirda1;
-UART_HandleTypeDef huart2;
-
-int test = 0;
-
-/* USER CODE END Includes */
-
-/* Private variables ---------------------------------------------------------*/
-//TIM_HandleTypeDef htim1;
-//
-//IRDA_HandleTypeDef hirda1;
-//UART_HandleTypeDef huart2;
-//
-//osThreadId defaultTaskHandle;
-
-/* USER CODE BEGIN PV */
-/* Private variables ---------------------------------------------------------*/
-
-/* USER CODE END PV */
-
-/* Private function prototypes -----------------------------------------------*/
-void SystemClock_Config(void);
-//static void MX_GPIO_Init(void);
-//static void MX_USART1_IRDA_Init(void);
-//static void MX_USART2_UART_Init(void);
-static void MX_TIM1_Init(void);
-static void ToggleLed4(void *pvParameters);
-static void ToggleLed3(void *pvParameters);
-static void sendData(void *pvParameters);
-static void receiveData(void *pvParameters);
-
 
 xQueueHandle pbq;
 
 
-/* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
+void SystemClock_Config(void);
+static void MX_TIM1_Init(void);
+static void ToggleLed4(void *pvParameters);
+static void ToggleLed3(void *pvParameters);
+static void sendDataUART(void *pvParameters);
+static void receiveDataUART(void *pvParameters);
+//static void sendIRData(void *pvParameters);
+//static void receiveIRData(void *pvParameters);
 
-/* USER CODE END PFP */
 
-/* USER CODE BEGIN 0 */
 
-/* USER CODE END 0 */
 
 int main(void)
 {
 
-  /* USER CODE BEGIN 1 */
-
-  /* USER CODE END 1 */
-
-  /* MCU Configuration----------------------------------------------------------*/
-
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
 
-  /* USER CODE BEGIN Init */
-
-  /* USER CODE END Init */
 
   /* Configure the system clock */
   SystemClock_Config();
 
-  /* USER CODE BEGIN SysInit */
-
-  /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
-//  MX_GPIO_Init();
-//
-//  MX_USART1_IRDA_Init();
-//  MX_USART2_UART_Init();
+
   MX_TIM1_Init();
   GPIOInit();
   uartInit();
@@ -162,10 +126,6 @@ int main(void)
   /* start timers, add new ones, ... */
   /* USER CODE END RTOS_TIMERS */
 
-  /* Create the thread(s) */
-  /* definition and creation of defaultTask */
-//  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
-//  defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -194,8 +154,8 @@ int main(void)
 //    );
 
     xTaskCreate(
-    	  sendData,                 /* Function pointer */
-  		  "sendData",                          /* Task name - for debugging only*/
+    		sendDataUART,                 /* Function pointer */
+  		  "sendDataUART",                          /* Task name - for debugging only*/
   		  configMINIMAL_STACK_SIZE,         /* Stack depth in words */
   		  NULL,                     /* Pointer to tasks arguments (parameter) */
   		  tskIDLE_PRIORITY + 5,           /* Task priority*/
@@ -203,13 +163,31 @@ int main(void)
     );
 
     xTaskCreate(
-    	  receiveData,                 /* Function pointer */
-   		  "receiveData",                          /* Task name - for debugging only*/
+    		receiveDataUART,                 /* Function pointer */
+   		  "receiveDataUART",                          /* Task name - for debugging only*/
    		  configMINIMAL_STACK_SIZE,         /* Stack depth in words */
    		  NULL,                     /* Pointer to tasks arguments (parameter) */
    		  tskIDLE_PRIORITY + 5,           /* Task priority*/
    		  NULL                              /* Task handle */
      );
+
+//    xTaskCreate(
+//    	  sendIRData,                 /* Function pointer */
+//  		  "sendIRData",                          /* Task name - for debugging only*/
+//  		  configMINIMAL_STACK_SIZE,         /* Stack depth in words */
+//  		  NULL,                     /* Pointer to tasks arguments (parameter) */
+//  		  tskIDLE_PRIORITY + 5,           /* Task priority*/
+//  		  NULL                              /* Task handle */
+//    );
+//
+//    xTaskCreate(
+//    	  receiveIRData,                 /* Function pointer */
+//   		  "receiveIRData",                          /* Task name - for debugging only*/
+//   		  configMINIMAL_STACK_SIZE,         /* Stack depth in words */
+//   		  NULL,                     /* Pointer to tasks arguments (parameter) */
+//   		  tskIDLE_PRIORITY + 5,           /* Task priority*/
+//   		  NULL                              /* Task handle */
+//     );
 
     /* Start the RTOS Scheduler */
     vTaskStartScheduler();
@@ -235,31 +213,52 @@ void ToggleLed3(void *pvParameters){
   }
 }
 
-void sendData(void *pvParameters){
-
-	char buffer[100];
-	sprintf(buffer, "0/1/2/3/4");
+void sendDataUART(void *pvParameters){
 	while(1){
-		uartWrite(UART_2, buffer);
-		vTaskDelay(1600 / portTICK_RATE_MS);
+		strcpy(SerialTXBuffer, "DISPARO,DronA/");
+//		if (IRDA_TO_UART_CP)
+//		{
+			uartWrite(UART_2, SerialTXBuffer);
+			vTaskDelay(1600 / portTICK_RATE_MS);
+			IRDA_TO_UART_CP = FALSE;
+//		}
 	}
 }
 
-void receiveData(void *pvParameters){
-	char buffer[100];
-	char buffercopy[100];
+void receiveDataUART(void *pvParameters){
 	while(1){
-		if (uartRead(UART_2, buffer) == HAL_OK)
+		if (uartRead(UART_2, SerialRXBuffer, '/') == HAL_OK)
 		{
-			if (test == 0){
-				test = 1;
-				memcpy(buffercopy, buffer, strlen(buffer) + 1);
-			}
+
+				UART_TO_IRDA_CP = enterBridgeMode(SerialRXBuffer, strlen(SerialRXBuffer), IrDATXBuffer, strlen(IrDATXBuffer));
+
 		}
 		vTaskDelay(1600 / portTICK_RATE_MS);
 	}
 
 }
+//
+//void sendIRData(void *pvParameters){
+//
+//	while(1){
+//		if (IR_Ready)
+//		{
+//			memcpy (IRTXBuffer, SerialRXBuffer, strlen(SerialRXBuffer) + 1);
+//			IR_Ready = FALSE;
+//		}
+//		vTaskDelay(1600 / portTICK_RATE_MS);
+//	}
+//}
+//
+//void receiveIRData(void *pvParameters){
+//
+//	while(1){
+//		sprintf(IRRXBuffer, "0/1/2/3/4/");
+//		Serial_Ready = TRUE;
+//		vTaskDelay(1600 / portTICK_RATE_MS);
+//	}
+//
+//}
 /** System Clock Configuration
 */
 void SystemClock_Config(void)

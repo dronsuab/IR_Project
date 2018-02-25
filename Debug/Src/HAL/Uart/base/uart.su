@@ -1,9 +1,9 @@
 uart.c:20:6:uartInterruptHandler	8	static
 uart.c:30:6:uartInit	32	static
-uart.c:70:19:uartStop	24	static
-uart.c:95:19:uartStart	16	static
-uart.c:115:19:uartRead	16	static
-uart.c:135:19:uartWrite	16	static
-uart.c:145:19:uartDriverWritePolling	16	static
-uart.c:150:6:HAL_UART_TxCpltCallback	0	static
-uart.c:155:6:HAL_UART_RxCpltCallback	32	static
+uart.c:69:19:uartStop	24	static
+uart.c:94:19:uartStart	16	static
+uart.c:114:19:uartRead	24	static
+uart.c:138:19:uartWrite	16	static
+uart.c:148:19:uartDriverWritePolling	16	static
+uart.c:153:6:HAL_UART_TxCpltCallback	0	static
+uart.c:158:6:HAL_UART_RxCpltCallback	32	static

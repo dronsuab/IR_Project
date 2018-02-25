@@ -11,8 +11,8 @@
 #include "common.h"
 #include "UART_map.h"
 #include "GPIO.h"
+#include "../../../Tools/CircularBuffer/CircularBuffer.h"
 
-#include "../../../CircularBuffer/base/CircularBuffer.h"
 
 
 #define MAX_UART_BUFFER_SIZE    256
@@ -23,8 +23,7 @@
  * and returns eError.
  */
 
-uint8_t UART_TX_CP;
-uint8_t UART_RX_CP;
+
 
 typedef HAL_StatusTypeDef (*uartRxCallback)(uint8_t);
 typedef HAL_StatusTypeDef (*uartTxCallback)(uint8_t);
@@ -66,6 +65,6 @@ HAL_StatusTypeDef uartStop(void);
 HAL_StatusTypeDef uartStart(void);
 HAL_StatusTypeDef uartWrite(eUart  uartPort, char* buffer);
 HAL_StatusTypeDef uartDriverWritePolling(eUart uartPort, char* buffer);
-HAL_StatusTypeDef uartRead(eUart  uartPort, char* buffer);
+HAL_StatusTypeDef uartRead(eUart  uartPort, char* buffer, uint8_t lastChar);
 
 #endif // HAL_UART_BASE_UART_H_

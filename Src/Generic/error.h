@@ -5,14 +5,10 @@
 
 typedef enum
 {
-	RESULT_OK,
-	RESULT_FAIL,
-	RESULT_BUFFER_EMPTY,
-	RESULT_BUFFER_FULL,
-    RESULT_BUSY,
-    RESULT_NOT_INITIALIZED,
-	NUM_OF_RESULT_ERRORS
-} eError;
+	FALSE,
+	TRUE
+} tBool;
+
 
 #endif
 

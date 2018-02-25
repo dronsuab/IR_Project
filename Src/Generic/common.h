@@ -6,4 +6,6 @@
 #include <string.h>
 
 #include "config.h"
-//#include "error.h"
+#include "error.h"
+#include "Strings.h"
+
