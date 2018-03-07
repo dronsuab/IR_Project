@@ -113,5 +113,10 @@ void USART2_IRQHandler(void)
 	HAL_UART2_IRQ();
 }
 
+//void B1_IRQHandler(void)
+//{
+//	EXTI0_1_IRQHandler();
+//}
+
 /* USER CODE END 1 */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

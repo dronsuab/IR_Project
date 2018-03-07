@@ -23,6 +23,7 @@ typedef enum
 	GPIO_LED_3,
 	GPIO_LED_4,
 
+	USER_BUTTON_B1,
 
     NUM_OF_GPIO
 } eGPIO;

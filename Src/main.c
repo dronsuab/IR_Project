@@ -71,6 +71,7 @@ char IrDARXBuffer[50];
 
 tBool UART_TO_IRDA_CP;
 tBool IRDA_TO_UART_CP;
+tBool pushed = FALSE;
 
 TIM_HandleTypeDef htim1;
 
@@ -214,14 +215,19 @@ void ToggleLed3(void *pvParameters){
 }
 
 void sendDataUART(void *pvParameters){
+	strcpy(SerialTXBuffer, "DISPARO,DronA/");
 	while(1){
-		strcpy(SerialTXBuffer, "DISPARO,DronA/");
-//		if (IRDA_TO_UART_CP)
-//		{
+		if (GPIORead(USER_BUTTON_B1) == GPIO_HIGH)
+		{
 			uartWrite(UART_2, SerialTXBuffer);
 			vTaskDelay(1600 / portTICK_RATE_MS);
-			IRDA_TO_UART_CP = FALSE;
-//		}
+			//IRDA_TO_UART_CP = FALSE;
+			pushed = !pushed;
+			if (pushed)
+				GPIOWrite(GPIO_LED_3, GPIO_HIGH);
+			else
+				GPIOWrite(GPIO_LED_3, GPIO_LOW);
+		}
 	}
 }
 

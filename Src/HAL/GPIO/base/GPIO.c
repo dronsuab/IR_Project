@@ -101,6 +101,9 @@ eGPIOValue GPIORead(eGPIO port)
 	return HAL_GPIO_ReadPin(GPIOInstanceMap[port].port, GPIOInstanceMap[port].pin);
 }
 
-
+//void buttonInterruptHandler(uint16_t GPIO_Pin)
+//{
+//	HAL_GPIO_EXTI_IRQHandler(GPIO_Pin);
+//}
 
 
