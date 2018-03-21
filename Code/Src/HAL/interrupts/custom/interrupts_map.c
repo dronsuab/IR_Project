@@ -15,7 +15,7 @@
 #include "uart.h"
 
 
-tInterruptsInstanceMap interruptsInstanceMap[NUM_OF_IRQS] =
+sInterruptsInstanceMap interruptsInstanceMap[NUM_OF_IRQS] =
 {
 		/* IRQ_SYSTICK		*/	{SysTick_IRQn		, 	TICK_INT_PRIORITY,	IRQ_SUBPRIORITY_0,		IRQ_ENABLE	},
 		/* IRQ_USART1		*/	{USART1_IRQn		,	IRQ_PRIORITY_1	 ,	IRQ_SUBPRIORITY_0,		IRQ_ENABLE	},

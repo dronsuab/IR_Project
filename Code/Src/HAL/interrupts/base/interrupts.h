@@ -32,13 +32,11 @@ typedef struct
 	uint8_t   SubPriority;
 	eIRQState  State;
 
-}tInterruptsInstanceMap;
+}sInterruptsInstanceMap;
 
 void interruptsInit( void );
 void interruptsStart( void );
 void interruptsStop( void );
 
-void interruptsDisable( void );
-void interruptsEnable( void );
 
 #endif /* HAL_INTERRUPTS_BASE_INTERRUPTS_H_ */

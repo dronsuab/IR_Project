@@ -18,8 +18,6 @@ tBool IRDA_TO_UART_CP;
 tBool pushed = FALSE;
 
 
-xQueueHandle pbq;
-
 
 void systemInit(void)
 {

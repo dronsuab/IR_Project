@@ -9,7 +9,7 @@
 #include "interrupts.h"
 #include "interrupts_map.h"
 
-extern tInterruptsInstanceMap interruptsInstanceMap[NUM_OF_IRQS];
+extern sInterruptsInstanceMap interruptsInstanceMap[NUM_OF_IRQS];
 
 void interruptsInit( void )
 {

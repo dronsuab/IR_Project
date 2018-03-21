@@ -10,9 +10,9 @@
 #include "common.h"
 
 
-extern const tUartInstanceMap UARTInstanceMap[NUM_OF_UART];
+extern const sUartInstanceMap UARTInstanceMap[NUM_OF_UART];
 UART_HandleTypeDef uartHandlers[NUM_OF_UART];
-tUartContext uartCircularBuffers[NUM_OF_UART];
+sUartContext uartCircularBuffers[NUM_OF_UART];
 uint8_t RxByte;
 static eUart uartPortIRQ;
 
@@ -30,7 +30,7 @@ void uartInterruptHandler(eUart uartPort)
 void uartInit(void)
 {
     UART_HandleTypeDef* uart_handler;
-    const tUartInstanceMap* uart_instance;
+    const sUartInstanceMap* uart_instance;
     uint8_t i;
 
 

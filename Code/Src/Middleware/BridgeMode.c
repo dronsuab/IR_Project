@@ -11,9 +11,9 @@
 
 #define MAX_CHARS 5
 
-static Led tLed;
-static Muerto tMuerto;
-static Disparo tDisparo;
+static sLed Led;
+static sMuerto Muerto;
+static sDisparo Disparo;
 
 char tag[10];
 
@@ -53,20 +53,20 @@ tBool enterBridgeMode(char *RxBuffer, uint8_t Rxlength, char *TxBuffer, uint8_t 
 
 	if (strcmp(tag, "CFIRE") == 0)
 	{
-		strncpy(tDisparo.controller, &RxBuffer[index[0]+1], (index[1]-index[0]-1));
-		strncpy(tDisparo.weapon, &RxBuffer[index[1]+1], lastcharacter-index[1]-1);
+		strncpy(Disparo.controller, &RxBuffer[index[0]+1], (index[1]-index[0]-1));
+		strncpy(Disparo.weapon, &RxBuffer[index[1]+1], lastcharacter-index[1]-1);
 
 	}
 
 	else if (strcmp(tag, "LED") == 0)
 	{
-		strncpy(tLed.drone, &RxBuffer[index[0]+1], (index[1]-index[0]-1));
-		strncpy(tLed.right, &RxBuffer[index[1]+1], (index[2]-index[1]-1));
-		strncpy(tLed.left, &RxBuffer[index[2]+1], (index[3]-index[2]-1));
-		strncpy(tLed.fw, &RxBuffer[index[3]+1], (index[4]-index[3]-1));
-		strncpy(tLed.bw, &RxBuffer[index[4]+1], lastcharacter-index[4]-1);
+		strncpy(Led.drone, &RxBuffer[index[0]+1], (index[1]-index[0]-1));
+		strncpy(Led.right, &RxBuffer[index[1]+1], (index[2]-index[1]-1));
+		strncpy(Led.left, &RxBuffer[index[2]+1], (index[3]-index[2]-1));
+		strncpy(Led.fw, &RxBuffer[index[3]+1], (index[4]-index[3]-1));
+		strncpy(Led.bw, &RxBuffer[index[4]+1], lastcharacter-index[4]-1);
 
-		if ((tLed.right[0] == '1') || (tLed.left[0] == '1'))
+		if ((Led.right[0] == '1') || (Led.left[0] == '1'))
 		{
 			GPIOWrite(GPIO_LED_3, GPIO_HIGH);
 		}
@@ -74,7 +74,7 @@ tBool enterBridgeMode(char *RxBuffer, uint8_t Rxlength, char *TxBuffer, uint8_t 
 		{
 			GPIOWrite(GPIO_LED_3, GPIO_LOW);
 		}
-		if ((tLed.fw[0] == '1') || (tLed.bw[0] == '1'))
+		if ((Led.fw[0] == '1') || (Led.bw[0] == '1'))
 		{
 			GPIOWrite(GPIO_LED_4, GPIO_HIGH);
 		}
@@ -86,8 +86,8 @@ tBool enterBridgeMode(char *RxBuffer, uint8_t Rxlength, char *TxBuffer, uint8_t 
 	}
 	else if (strcmp(tag, "DEAD") == 0)
 	{
-		strncpy(tMuerto.controller, &RxBuffer[index[0]+1], (index[1]-index[0]-1));
-		strncpy(tMuerto.drone, &RxBuffer[index[1]+1], lastcharacter-index[1]-1);
+		strncpy(Muerto.controller, &RxBuffer[index[0]+1], (index[1]-index[0]-1));
+		strncpy(Muerto.drone, &RxBuffer[index[1]+1], lastcharacter-index[1]-1);
 
 	}
 	else if (strcmp(tag, "FJUEGO") == 0)
@@ -125,13 +125,13 @@ uint8_t searchChar(char *searchedbuffer, uint8_t length, char character)
 
 void initStructs(void)
 {
-	initString(tDisparo.controller, strlen(tDisparo.controller));
-	initString(tDisparo.weapon, strlen(tDisparo.weapon));
-	initString(tLed.drone, strlen(tLed.drone));
-	initString(tLed.right, strlen(tLed.right));
-	initString(tLed.left, strlen(tLed.left));
-	initString(tLed.fw, strlen(tLed.fw));
-	initString(tLed.bw, strlen(tLed.bw));
-	initString(tMuerto.controller, strlen(tMuerto.controller));
-	initString(tMuerto.drone, strlen(tMuerto.drone));
+	initString(Disparo.controller, strlen(Disparo.controller));
+	initString(Disparo.weapon, strlen(Disparo.weapon));
+	initString(Led.drone, strlen(Led.drone));
+	initString(Led.right, strlen(Led.right));
+	initString(Led.left, strlen(Led.left));
+	initString(Led.fw, strlen(Led.fw));
+	initString(Led.bw, strlen(Led.bw));
+	initString(Muerto.controller, strlen(Muerto.controller));
+	initString(Muerto.drone, strlen(Muerto.drone));
 }

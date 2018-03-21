@@ -32,7 +32,7 @@ typedef struct
 {
 	CircularBuffer rxBuffer;
 	CircularBuffer txBuffer;
-} tUartContext;
+} sUartContext;
 
 typedef struct
 {
@@ -56,7 +56,7 @@ typedef struct
     //Callbacks
     uartRxCallback  rxCallback;     /**< @brief Callback for RX interruption */
     uartTxCallback  txCallback;     /**< @brief Callback for TX interruption */
-} tUartInstanceMap;
+} sUartInstanceMap;
 
 
 void uartInterruptHandler(eUart uartPort);

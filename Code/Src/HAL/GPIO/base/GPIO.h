@@ -16,7 +16,6 @@ typedef enum
 	GPIO_LOW,
 	GPIO_HIGH,
 	GPIO_TOGGLE,
-	GPIO_DEFAULT
 } eGPIOValue;
 
 typedef struct
@@ -28,7 +27,7 @@ typedef struct
 	uint8_t    			pupd;
 	uint8_t				alternate;
 	eGPIOValue			initialValue;
-} tGPIOInstanceMap;
+} sGPIOInstanceMap;
 
 
 void GPIOInit( void );

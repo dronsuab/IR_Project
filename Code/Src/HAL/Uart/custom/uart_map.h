@@ -12,8 +12,6 @@
 #include "common.h"
 #include "config.h"
 
-#define UART_TX_BUFFER 100
-
 
 #ifdef IS_UART1
 #define USART1_TX_BUFFER          256

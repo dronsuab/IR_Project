@@ -20,19 +20,19 @@ typedef struct
 	char left[1];
 	char fw[1];
 	char bw[1];
-}Led;
+}sLed;
 
 typedef struct
 {
 	char controller[10];
 	char drone[10];
-}Muerto;
+}sMuerto;
 
 typedef struct
 {
 	char controller[10];
 	char weapon[10];
-}Disparo;
+}sDisparo;
 
 
 

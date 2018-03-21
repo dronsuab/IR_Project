@@ -19,7 +19,7 @@
     uint8_t usart2RxBuffer[USART2_RX_BUFFER];
 #endif
 
-const tUartInstanceMap UARTInstanceMap[NUM_OF_UART] =  {
+const sUartInstanceMap UARTInstanceMap[NUM_OF_UART] =  {
 
 #ifdef IS_UART1
     {
