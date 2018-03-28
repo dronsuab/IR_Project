@@ -9,7 +9,7 @@
 #include "common.h"
 
 extern const sIrdaInstanceMap IRDAInstanceMap[NUM_OF_IRDA];
-IRDA_HandleTypeDef uartHandlers[NUM_OF_IRDA];
+IRDA_HandleTypeDef irdaHandlers[NUM_OF_IRDA];
 sIrdaContext irdaCircularBuffers[NUM_OF_IRDA];
 uint8_t RxByte;
 static eIrda irdaPortIRQ;
@@ -36,7 +36,7 @@ void irdaInit(void)
 
     for(i=0; i<NUM_OF_IRDA; i++) {
         irda_handler = &irdaHandlers[i];
-        irda_instance = &irdaInstanceMap[i];
+        irda_instance = &IRDAInstanceMap[i];
         irda_handler->Instance        	= irda_instance->port;
         irda_handler->Init.BaudRate  	= irda_instance->baudRate;
         irda_handler->Init.WordLength 	= irda_instance->dataSize;

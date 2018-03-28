@@ -27,7 +27,7 @@
 typedef enum
 {
 #ifdef IS_IRDA1
-    IRDA_1,
+    IRDA1,
 #endif
     NUM_OF_IRDA
 } eIrda;

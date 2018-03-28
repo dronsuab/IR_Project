@@ -32,9 +32,6 @@ const sUartInstanceMap UARTInstanceMap[NUM_OF_UART] =  {
         usart1TxBuffer,
         USART1_RX_BUFFER,
         usart1RxBuffer,
-        0, //NO DMA
-        0, //NO DMA
-        0, //NO DMA
         NULL, //modificable, mirar ejemplo MTG
         NULL,
     },
@@ -50,9 +47,6 @@ const sUartInstanceMap UARTInstanceMap[NUM_OF_UART] =  {
         usart2TxBuffer,
         USART2_RX_BUFFER,
         usart2RxBuffer,
-        0, //NO DMA
-        0, //NO DMA
-        0, //NO DMA
         NULL, //modificable, mirar ejemplo MTG
         NULL,
     },
