@@ -37,7 +37,7 @@ void uartInit(void)
 	#ifdef IS_UART1
         __HAL_RCC_USART1_CLK_ENABLE();
 	#endif
-	#ifdef IS_UART1
+	#ifdef IS_UART2
         __HAL_RCC_USART2_CLK_ENABLE();
 	#endif
 

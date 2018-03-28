@@ -48,11 +48,6 @@ typedef struct
     uint16_t        rxBufferSize;   /**< @brief Size of the tx buffer */
     uint8_t*        rxBufferPtr;    /**< @brief Pointer of the tx buffer */
 
-    //DmaChannel      dmaChn; //PENDING TO BE DEFINED
-    uint32_t*       dmaSrc;         /**< @brief Not implemented */
-    uint8_t         dmaSrcLen;      /**< @brief Not implemented */
-    uint8_t         dmaIrq;         /**< @brief Not implemented */
-
     //Callbacks
     uartRxCallback  rxCallback;     /**< @brief Callback for RX interruption */
     uartTxCallback  txCallback;     /**< @brief Callback for TX interruption */
