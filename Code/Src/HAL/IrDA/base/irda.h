@@ -32,7 +32,7 @@ typedef struct
     USART_TypeDef*  port;           /**< @brief ST HAL UART port structure */
     uint32_t        baudRate;       /**< @brief speed of the UART port */
     uint8_t         dataSize;       /**< @brief Word Length of the sent data */
-    uint8_8 		mode;
+    uint8_t 		mode;
     uint8_t         parity;         /**< @brief Activate or deactivate Parity */
     uint8_t         prescaler;      /**< @brief Prescaler value for dividing the UART/USART source clock
                                            to achieve low-power frequency */

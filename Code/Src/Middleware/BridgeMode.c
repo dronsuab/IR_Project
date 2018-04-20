@@ -76,11 +76,11 @@ tBool enterBridgeMode(char *RxBuffer, uint8_t Rxlength, char *TxBuffer, uint8_t 
 		}
 		if ((Led.fw[0] == '1') || (Led.bw[0] == '1'))
 		{
-			GPIOWrite(GPIO_LED_4, GPIO_HIGH);
+			//GPIOWrite(GPIO_LED_4, GPIO_HIGH);
 		}
 		else
 		{
-			GPIOWrite(GPIO_LED_4, GPIO_LOW);
+			//GPIOWrite(GPIO_LED_4, GPIO_LOW);
 		}
 
 	}

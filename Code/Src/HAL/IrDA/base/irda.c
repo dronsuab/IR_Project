@@ -78,7 +78,7 @@ HAL_StatusTypeDef irdaStart(void)
 {
     uint8_t i;
     IRDA_HandleTypeDef* irda_handler;
-
+    HAL_IRDA_MspInit(irda_handler);
     for(i=0; i<NUM_OF_IRDA; i++){
         irda_handler = &irdaHandlers[i];
         if(HAL_IRDA_DeInit(irda_handler) != HAL_OK)
@@ -105,7 +105,6 @@ HAL_StatusTypeDef irdaRead(eIrda irdaPort, char* buffer, uint8_t lastChar)
 		initString(buffer,bufferSize);
 		result = HAL_ERROR;
     }else{
-    	GPIOWrite(GPIO_1, GPIO_HIGH);
         while((byte != lastChar) && (i<bufferSize) )
         {
             byte = GetFIFOByte(&irdaCircularBuffers[irdaPort].rxBuffer);

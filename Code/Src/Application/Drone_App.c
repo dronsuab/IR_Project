@@ -34,6 +34,8 @@ void systemInit(void)
 	  GPIOInit();
 	  uartInit();
 	  uartStart();
+	  irdaInit();
+	  irdaStart();
 	  interruptsInit();
 	  interruptsStart();
 }
@@ -61,14 +63,14 @@ void taskCreation(void)
 //  		  NULL                              /* Task handle */
 //    );
 
-    xTaskCreate(
-    		sendDataUART,                 /* Function pointer */
-  		  "sendDataUART",                          /* Task name - for debugging only*/
-  		  configMINIMAL_STACK_SIZE,         /* Stack depth in words */
-  		  NULL,                     /* Pointer to tasks arguments (parameter) */
-  		  tskIDLE_PRIORITY + 5,           /* Task priority*/
-  		  NULL                              /* Task handle */
-    );
+//    xTaskCreate(
+//    		sendDataUART,                 /* Function pointer */
+//  		  "sendDataUART",                          /* Task name - for debugging only*/
+//  		  configMINIMAL_STACK_SIZE,         /* Stack depth in words */
+//  		  NULL,                     /* Pointer to tasks arguments (parameter) */
+//  		  tskIDLE_PRIORITY + 5,           /* Task priority*/
+//  		  NULL                              /* Task handle */
+//    );
 
     xTaskCreate(
     		receiveDataUART,                 /* Function pointer */
@@ -79,29 +81,29 @@ void taskCreation(void)
    		  NULL                              /* Task handle */
      );
 
-//    xTaskCreate(
-//    	  sendIRData,                 /* Function pointer */
-//  		  "sendIRData",                          /* Task name - for debugging only*/
-//  		  configMINIMAL_STACK_SIZE,         /* Stack depth in words */
-//  		  NULL,                     /* Pointer to tasks arguments (parameter) */
-//  		  tskIDLE_PRIORITY + 5,           /* Task priority*/
-//  		  NULL                              /* Task handle */
-//    );
-//
-//    xTaskCreate(
-//    	  receiveIRData,                 /* Function pointer */
-//   		  "receiveIRData",                          /* Task name - for debugging only*/
-//   		  configMINIMAL_STACK_SIZE,         /* Stack depth in words */
-//   		  NULL,                     /* Pointer to tasks arguments (parameter) */
-//   		  tskIDLE_PRIORITY + 5,           /* Task priority*/
-//   		  NULL                              /* Task handle */
-//     );
+    xTaskCreate(
+    	  sendIRData,                 /* Function pointer */
+  		  "sendIRData",                          /* Task name - for debugging only*/
+  		  configMINIMAL_STACK_SIZE,         /* Stack depth in words */
+  		  NULL,                     /* Pointer to tasks arguments (parameter) */
+  		  tskIDLE_PRIORITY + 5,           /* Task priority*/
+  		  NULL                              /* Task handle */
+    );
+
+    xTaskCreate(
+    	  receiveIRData,                 /* Function pointer */
+   		  "receiveIRData",                          /* Task name - for debugging only*/
+   		  configMINIMAL_STACK_SIZE,         /* Stack depth in words */
+   		  NULL,                     /* Pointer to tasks arguments (parameter) */
+   		  tskIDLE_PRIORITY + 5,           /* Task priority*/
+   		  NULL                              /* Task handle */
+     );
 }
 
 void ToggleLed4(void *pvParameters){
 
   while (1) {
-	GPIOWrite(GPIO_LED_4, GPIO_TOGGLE);
+	//GPIOWrite(GPIO_LED_4, GPIO_TOGGLE);
     vTaskDelay(1500 / portTICK_RATE_MS);
   }
 }
@@ -114,58 +116,65 @@ void ToggleLed3(void *pvParameters){
   }
 }
 
-void sendDataUART(void *pvParameters){
-	strcpy(SerialTXBuffer, "DISPARO,DronA/");
+//void sendDataUART(void *pvParameters){
+//	strcpy(SerialTXBuffer, "DISPARO,DronA/");
+//	while(1){
+//		if (GPIORead(USER_BUTTON_B1) == GPIO_HIGH)
+//		{
+//			uartWrite(UART_2, SerialTXBuffer);
+//			//IRDA_TO_UART_CP = FALSE;
+//			pushed = !pushed;
+//			if (pushed)
+//				GPIOWrite(GPIO_LED_3, GPIO_HIGH);
+//			else
+//				GPIOWrite(GPIO_LED_3, GPIO_LOW);
+//			vTaskDelay(100 / portTICK_RATE_MS);
+//		}
+//	}
+//}
+
+void receiveDataUART(void *pvParameters){
+	while(1){
+		if (uartRead(UART_2, SerialRXBuffer, '/') == HAL_OK)
+		{
+				//GPIOWrite(GPIO_LED_4, GPIO_HIGH);
+				UART_TO_IRDA_CP = enterBridgeMode(SerialRXBuffer, strlen(SerialRXBuffer), IrDATXBuffer, strlen(IrDATXBuffer));
+
+		}
+		vTaskDelay(100 / portTICK_RATE_MS);
+	}
+
+}
+
+void sendIRData(void *pvParameters){
+	strcpy(IrDATXBuffer, "DISPARO,DronA/");
 	while(1){
 		if (GPIORead(USER_BUTTON_B1) == GPIO_HIGH)
 		{
-			uartWrite(UART_2, SerialTXBuffer);
+			irdaWrite(IRDA1, IrDATXBuffer);
 			//IRDA_TO_UART_CP = FALSE;
 			pushed = !pushed;
 			if (pushed)
 				GPIOWrite(GPIO_LED_3, GPIO_HIGH);
 			else
 				GPIOWrite(GPIO_LED_3, GPIO_LOW);
-			vTaskDelay(1600 / portTICK_RATE_MS);
+			vTaskDelay(100 / portTICK_RATE_MS);
 		}
 	}
 }
 
-void receiveDataUART(void *pvParameters){
+void receiveIRData(void *pvParameters){
+
 	while(1){
-		if (uartRead(UART_2, SerialRXBuffer, '/') == HAL_OK)
+		if (irdaRead(IRDA1, IrDARXBuffer, '/') == HAL_OK)
 		{
-				uartWrite(UART_2, SerialRXBuffer);
 				GPIOWrite(GPIO_LED_4, GPIO_HIGH);
-				//UART_TO_IRDA_CP = enterBridgeMode(SerialRXBuffer, strlen(SerialRXBuffer), IrDATXBuffer, strlen(IrDATXBuffer));
-
+				//UART_TO_IRDA_CP = enterBridgeMode(IrDARXBuffer, strlen(IrDARXBuffer), SerialTXBuffer, strlen(SerialTXBuffer));
 		}
-		vTaskDelay(1000 / portTICK_RATE_MS);
+		vTaskDelay(100 / portTICK_RATE_MS);
 	}
 
 }
-//
-//void sendIRData(void *pvParameters){
-//
-//	while(1){
-//		if (IR_Ready)
-//		{
-//			memcpy (IRTXBuffer, SerialRXBuffer, strlen(SerialRXBuffer) + 1);
-//			IR_Ready = FALSE;
-//		}
-//		vTaskDelay(1600 / portTICK_RATE_MS);
-//	}
-//}
-//
-//void receiveIRData(void *pvParameters){
-//
-//	while(1){
-//		sprintf(IRRXBuffer, "0/1/2/3/4/");
-//		Serial_Ready = TRUE;
-//		vTaskDelay(1600 / portTICK_RATE_MS);
-//	}
-//
-//}
 /** System Clock Configuration
 */
 void SystemClock_Config(void)
