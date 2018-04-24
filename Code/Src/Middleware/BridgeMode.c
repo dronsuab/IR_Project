@@ -8,6 +8,7 @@
 #include "common.h"
 #include "BridgeMode.h"
 #include "GPIO.h"
+#include "uart.h"
 
 #define MAX_CHARS 5
 
@@ -27,6 +28,7 @@ tBool enterBridgeMode(char *RxBuffer, uint8_t Rxlength, char *TxBuffer, uint8_t 
 	uint8_t lastcharacter;
 	uint8_t searchedcharacter;
 	tBool error = TRUE;
+	char SerialTXBuffer[50];
 
 	initStructs();
 	initString(tag, 10);
@@ -55,6 +57,9 @@ tBool enterBridgeMode(char *RxBuffer, uint8_t Rxlength, char *TxBuffer, uint8_t 
 	{
 		strncpy(Disparo.controller, &RxBuffer[index[0]+1], (index[1]-index[0]-1));
 		strncpy(Disparo.weapon, &RxBuffer[index[1]+1], lastcharacter-index[1]-1);
+		strcpy(SerialTXBuffer, "DISPARO,DronA/");
+		//uartWrite(UART_2, SerialTXBuffer);
+		GPIOWrite(GPIO_LED_3, GPIO_HIGH);
 
 	}
 
@@ -103,24 +108,7 @@ tBool enterBridgeMode(char *RxBuffer, uint8_t Rxlength, char *TxBuffer, uint8_t 
 
 }
 
-uint8_t searchChar(char *searchedbuffer, uint8_t length, char character)
-{
-	uint8_t i=0;
-	tBool found = FALSE;
-	char bufferchar;
 
-	while((i < length) && (!found))
-	{
-		bufferchar = *(searchedbuffer+i);
-		if (bufferchar == character)
-		{
-			found = TRUE;
-			return i;
-		}else
-			i++;
-	}
-	return 0;
-}
 
 
 void initStructs(void)

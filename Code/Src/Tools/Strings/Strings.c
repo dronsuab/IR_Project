@@ -16,3 +16,23 @@ void initString(char * buffer, uint8_t length)
 		buffer[i] = 0;
 	}
 }
+
+uint8_t searchChar(char *searchedbuffer, uint8_t length, char character)
+{
+	uint8_t i=0;
+	tBool found = FALSE;
+	char bufferchar;
+
+	while((i < length) && (!found))
+	{
+		bufferchar = *(searchedbuffer+i);
+		if (bufferchar == character)
+		{
+			found = TRUE;
+			return i;
+		}else
+			i++;
+	}
+	return 0;
+}
+

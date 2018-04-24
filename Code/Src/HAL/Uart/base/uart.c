@@ -15,6 +15,9 @@ UART_HandleTypeDef uartHandlers[NUM_OF_UART];
 sUartContext uartCircularBuffers[NUM_OF_UART];
 uint8_t RxByte;
 static eUart uartPortIRQ;
+volatile uint8_t contador = 0;
+volatile tBool tiempo = FALSE;
+volatile UART_RX_CP = FALSE;
 
 
 void uartInterruptHandler(eUart uartPort)
@@ -116,9 +119,9 @@ HAL_StatusTypeDef uartRead(eUart uartPort, char* buffer, uint8_t lastChar)
     uint32_t i=0;
     uint8_t byte=0;
     uint32_t bufferSize = 30;
-    uint8_t result;
+    uint8_t result=HAL_ERROR;
 
-    if(GetFIFOPendingBytes(&uartCircularBuffers[uartPort].rxBuffer) < 5 ){
+    if(GetFIFOPendingBytes(&uartCircularBuffers[uartPort].rxBuffer) < 1 ){
 		initString(buffer,bufferSize);
 		result = HAL_ERROR;
     }else{
@@ -130,7 +133,8 @@ HAL_StatusTypeDef uartRead(eUart uartPort, char* buffer, uint8_t lastChar)
             i++;
         }
         ResetFIFO(&uartCircularBuffers[uartPort].rxBuffer);
-        result = HAL_OK;
+        if(byte == lastChar)
+        	result = HAL_OK;
     }
 
     return result;
@@ -159,14 +163,49 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *uart_handler)
 {
 
-	if(GetFIFOFreeBytes(&uartCircularBuffers[uartPortIRQ].rxBuffer) > 0){
-		AddFIFOByte(&uartCircularBuffers[uartPortIRQ].rxBuffer, RxByte);
+	UART_RX_CP = FALSE;
+
+//	if (tiempo)
+//		GPIOWrite(GPIO_1, GPIO_HIGH);
+//	else
+//		GPIOWrite(GPIO_1, GPIO_LOW);
+//
+//	tiempo = !tiempo;
+
+
+//	if (contador != 0)
+//	{
+//		if (contador == 1)
+//		{
+//			contador++;
+//			GPIOWrite(GPIO_1, GPIO_HIGH);
+//		}
+//		if(GetFIFOFreeBytes(&uartCircularBuffers[uartPortIRQ].rxBuffer) > 0){
+//			AddFIFOByte(&uartCircularBuffers[uartPortIRQ].rxBuffer, RxByte);
+//		}
+//
+//	}
+//
+//	if (contador == 0)
+//		contador++;
+
+
+	if (tiempo)
+	{
+		GPIOWrite(GPIO_1, GPIO_HIGH);
+		if(GetFIFOFreeBytes(&uartCircularBuffers[uartPortIRQ].rxBuffer) > 0){
+			AddFIFOByte(&uartCircularBuffers[uartPortIRQ].rxBuffer, RxByte);
+		}
+		if((char)RxByte == '/')
+			UART_RX_CP = TRUE;
 	}
+	else
+		tiempo = !tiempo;
 
 	 HAL_UART_Receive_IT(uart_handler, &RxByte, 1 );
 
+
+
 }
-
-
 
 

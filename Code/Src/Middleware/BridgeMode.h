@@ -9,7 +9,6 @@
 #define MIDDLEWARE_BRIDGEMODE_H_
 
 tBool enterBridgeMode(char *RxBuffer, uint8_t Rxlength, char TxBuffer[], uint8_t TxLength);
-uint8_t searchChar(char *searchedbuffer, uint8_t length, char character);
 void initStructs(void);
 void initString(char * buffer, uint8_t length);
 

@@ -34,7 +34,7 @@ void HAL_UART1_IRQ(void)
 void HAL_UART2_IRQ(void)
 {
 #ifdef IS_UART2
-	irdaInterruptHandler(IRDA1);
+	uartInterruptHandler(UART_2);
 #endif
 }
 

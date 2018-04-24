@@ -126,7 +126,7 @@ void sendDataUART(void *pvParameters){
 				GPIOWrite(GPIO_LED_3, GPIO_HIGH);
 			else
 				GPIOWrite(GPIO_LED_3, GPIO_LOW);
-			vTaskDelay(1600 / portTICK_RATE_MS);
+			vTaskDelay(100 / portTICK_RATE_MS);
 		}
 	}
 }
@@ -135,12 +135,15 @@ void receiveDataUART(void *pvParameters){
 	while(1){
 		if (uartRead(UART_2, SerialRXBuffer, '/') == HAL_OK)
 		{
-				uartWrite(UART_2, SerialRXBuffer);
+
 				GPIOWrite(GPIO_LED_4, GPIO_HIGH);
-				//UART_TO_IRDA_CP = enterBridgeMode(SerialRXBuffer, strlen(SerialRXBuffer), IrDATXBuffer, strlen(IrDATXBuffer));
+				GPIOWrite(GPIO_1, GPIO_LOW);
+				UART_TO_IRDA_CP = enterBridgeMode(SerialRXBuffer, strlen(SerialRXBuffer), IrDATXBuffer, strlen(IrDATXBuffer));
+
+
 
 		}
-		vTaskDelay(1000 / portTICK_RATE_MS);
+
 	}
 
 }
