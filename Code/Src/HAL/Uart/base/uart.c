@@ -17,7 +17,7 @@ uint8_t RxByte;
 static eUart uartPortIRQ;
 volatile uint8_t contador = 0;
 volatile tBool tiempo = FALSE;
-volatile UART_RX_CP = FALSE;
+
 
 
 void uartInterruptHandler(eUart uartPort)
@@ -163,7 +163,7 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *uart_handler)
 {
 
-	UART_RX_CP = FALSE;
+//	UART_RX_CP = FALSE;
 
 //	if (tiempo)
 //		GPIOWrite(GPIO_1, GPIO_HIGH);
@@ -196,8 +196,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *uart_handler)
 		if(GetFIFOFreeBytes(&uartCircularBuffers[uartPortIRQ].rxBuffer) > 0){
 			AddFIFOByte(&uartCircularBuffers[uartPortIRQ].rxBuffer, RxByte);
 		}
-		if((char)RxByte == '/')
-			UART_RX_CP = TRUE;
+//		if((char)RxByte == '/')
+//			UART_RX_CP = TRUE;
 	}
 	else
 		tiempo = !tiempo;

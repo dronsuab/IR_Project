@@ -19,6 +19,17 @@ static sDisparo Disparo;
 char tag[10];
 
 
+/*  enterBridgeMode
+ *
+ *  @description: Parses a RX buffer until EOM. Splits the message into fields.
+ *  			  Decides further actions based on the Tag field.
+ *
+ *  @param:		  RxBuffer, Rxlength, TxBuffer, TxLength.
+ *
+ *  @return:      error.
+ *
+ *  */
+
 tBool enterBridgeMode(char *RxBuffer, uint8_t Rxlength, char *TxBuffer, uint8_t TxLength)
 {
 
@@ -109,7 +120,15 @@ tBool enterBridgeMode(char *RxBuffer, uint8_t Rxlength, char *TxBuffer, uint8_t 
 }
 
 
-
+/*  initStructs
+ *
+ *  @description: Initializes all fields (structs).
+ *
+ *  @param:		  None.
+ *
+ *  @return:      None.
+ *
+ *  */
 
 void initStructs(void)
 {

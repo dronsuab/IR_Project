@@ -27,8 +27,6 @@
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-void ToggleLed4(void *pvParameters);
-void ToggleLed3(void *pvParameters);
 void sendDataUART(void *pvParameters);
 void receiveDataUART(void *pvParameters);
 void systemInit(void);

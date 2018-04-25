@@ -8,6 +8,16 @@
 #include "common.h"
 #include "Strings.h"
 
+/*  initString
+ *
+ *  @description: Initializes a string.
+ *
+ *  @param:		  buffer, length.
+ *
+ *  @return:      None.
+ *
+ *  */
+
 void initString(char * buffer, uint8_t length)
 {
 	uint8_t i;
@@ -17,21 +27,33 @@ void initString(char * buffer, uint8_t length)
 	}
 }
 
-uint8_t searchChar(char *searchedbuffer, uint8_t length, char character)
+
+/*  searchChar
+ *
+ *  @description: Searches for a specific char in a string.
+ *
+ *  @param:		  buffer, length, character.
+ *
+ *  @return:      if (found) -> index
+ *  			  else       -> 0
+ *
+ *  */
+
+uint8_t searchChar(char *buffer, uint8_t length, char character)
 {
-	uint8_t i=0;
+	uint8_t index=0;
 	tBool found = FALSE;
 	char bufferchar;
 
-	while((i < length) && (!found))
+	while((index < length) && (!found))
 	{
-		bufferchar = *(searchedbuffer+i);
+		bufferchar = *(buffer+index);
 		if (bufferchar == character)
 		{
 			found = TRUE;
-			return i;
+			return index;
 		}else
-			i++;
+			index++;
 	}
 	return 0;
 }

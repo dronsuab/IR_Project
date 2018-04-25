@@ -7,22 +7,32 @@
 
 #include "Drone_App.h"
 
-/* Private variables ---------------------------------------------------------*/
+/* Private variables */
 char SerialTXBuffer[50];
 char SerialRXBuffer[50];
 char IrDATXBuffer[50];
 char IrDARXBuffer[50];
 
-tBool UART_TO_IRDA_CP;
-tBool IRDA_TO_UART_CP;
 tBool pushed = FALSE;
 
+osSemaphoreId osSemaphore;
 
+
+/*  systemInit
+ *
+ *  @description: Initializes all peripherals and clocks.
+ *
+ *  @param:		  None.
+ *
+ *  @return       None.
+ *
+ *  */
 
 void systemInit(void)
 {
 	  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
 	  HAL_Init();
+
 
 
 	  /* Configure the system clock */
@@ -38,34 +48,32 @@ void systemInit(void)
 	  interruptsStart();
 }
 
+
+/*  taskCreation
+ *
+ *  @description: Creates semaphores and tasks involved in the RTOS.
+ *
+ *  @param:		  None.
+ *
+ *  @return:  	  None.
+ *
+ *  */
+
 void taskCreation(void)
 {
 
+	  /*Create semaphores for tasks*/
+	  osSemaphoreDef(SEM);
+	  osSemaphore = osSemaphoreCreate(osSemaphore(SEM) , 1);
+
+
     /* Create tasks */
-//    xTaskCreate(
-//    	  ToggleLed4,                 /* Function pointer */
-//  		  "ToggleLed4",                          /* Task name - for debugging only*/
-//  		  configMINIMAL_STACK_SIZE,         /* Stack depth in words */
-//  		  NULL,                     /* Pointer to tasks arguments (parameter) */
-//  		  tskIDLE_PRIORITY + 2,           /* Task priority*/
-//  		  NULL                              /* Task handle */
-//    );
-//
-//    /* Create tasks */
-//    xTaskCreate(
-//    	  ToggleLed3,                 /* Function pointer */
-//  		  "ToggleLed3",                          /* Task name - for debugging only*/
-//  		  configMINIMAL_STACK_SIZE,         /* Stack depth in words */
-//  		  NULL,                     /* Pointer to tasks arguments (parameter) */
-//  		  tskIDLE_PRIORITY + 2,           /* Task priority*/
-//  		  NULL                              /* Task handle */
-//    );
 
     xTaskCreate(
     		sendDataUART,                 /* Function pointer */
   		  "sendDataUART",                          /* Task name - for debugging only*/
   		  configMINIMAL_STACK_SIZE,         /* Stack depth in words */
-  		  NULL,                     /* Pointer to tasks arguments (parameter) */
+  		  &osSemaphore,                     /* Pointer to tasks arguments (parameter) */
   		  tskIDLE_PRIORITY + 5,           /* Task priority*/
   		  NULL                              /* Task handle */
     );
@@ -74,7 +82,7 @@ void taskCreation(void)
     		receiveDataUART,                 /* Function pointer */
    		  "receiveDataUART",                          /* Task name - for debugging only*/
    		  configMINIMAL_STACK_SIZE,         /* Stack depth in words */
-   		  NULL,                     /* Pointer to tasks arguments (parameter) */
+   		  &osSemaphore,                     /* Pointer to tasks arguments (parameter) */
    		  tskIDLE_PRIORITY + 5,           /* Task priority*/
    		  NULL                              /* Task handle */
      );
@@ -98,26 +106,22 @@ void taskCreation(void)
 //     );
 }
 
-void ToggleLed4(void *pvParameters){
 
-  while (1) {
-	GPIOWrite(GPIO_LED_4, GPIO_TOGGLE);
-    vTaskDelay(1500 / portTICK_RATE_MS);
-  }
-}
-
-void ToggleLed3(void *pvParameters){
-
-  while (1) {
-	GPIOWrite(GPIO_LED_3, GPIO_LOW);
-    vTaskDelay(1600 / portTICK_RATE_MS);
-  }
-}
+/*  sendDataUART
+ *
+ *  @description: Sends a defined buffer through serial port when a semaphore is released.
+ *
+ *  @param:		  osSemaphore.
+ *
+ *  @return:  	  None.
+ *
+ *  */
 
 void sendDataUART(void *pvParameters){
+	osSemaphoreId semaphore = *((osSemaphoreId*) pvParameters);
 	strcpy(SerialTXBuffer, "DISPARO,DronA/");
 	while(1){
-		if (GPIORead(USER_BUTTON_B1) == GPIO_HIGH)
+		if (osSemaphoreWait(semaphore , 0) == osOK)
 		{
 			uartWrite(UART_2, SerialTXBuffer);
 			//IRDA_TO_UART_CP = FALSE;
@@ -126,22 +130,30 @@ void sendDataUART(void *pvParameters){
 				GPIOWrite(GPIO_LED_3, GPIO_HIGH);
 			else
 				GPIOWrite(GPIO_LED_3, GPIO_LOW);
-			vTaskDelay(100 / portTICK_RATE_MS);
 		}
 	}
 }
 
+
+/*  receiveDataUART
+ *
+ *  @description: Parses serial buffer if it has been filled and releases TX semaphore.
+ *
+ *  @param:		  osSemaphore.
+ *
+ *  @return:	  None.
+ *
+ *  */
+
 void receiveDataUART(void *pvParameters){
+	osSemaphoreId semaphore = *((osSemaphoreId*) pvParameters);
 	while(1){
 		if (uartRead(UART_2, SerialRXBuffer, '/') == HAL_OK)
 		{
-
 				GPIOWrite(GPIO_LED_4, GPIO_HIGH);
 				GPIOWrite(GPIO_1, GPIO_LOW);
-				UART_TO_IRDA_CP = enterBridgeMode(SerialRXBuffer, strlen(SerialRXBuffer), IrDATXBuffer, strlen(IrDATXBuffer));
-
-
-
+				enterBridgeMode(SerialRXBuffer, strlen(SerialRXBuffer), IrDATXBuffer, strlen(IrDATXBuffer));
+				osSemaphoreRelease(semaphore);
 		}
 
 	}

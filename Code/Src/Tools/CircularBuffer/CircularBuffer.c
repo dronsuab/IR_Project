@@ -8,8 +8,18 @@
 #include "CircularBuffer.h"
 
 #include "common.h"
-//#include "interrupts.h"
 
+
+
+/*  CreateFIFO
+ *
+ *  @description: Initializes a CircularBuffer.
+ *
+ *  @param:		  CircularBuffer, bufferPtr, size.
+ *
+ *  @return:      None.
+ *
+ *  */
 
 void CreateFIFO(CircularBuffer* buffer, uint8_t* bufferPtr, uint16_t size)
 {
@@ -20,6 +30,17 @@ void CreateFIFO(CircularBuffer* buffer, uint8_t* bufferPtr, uint16_t size)
     buffer->numOfBytes = 0;
 }
 
+
+/*  ResetFIFO
+ *
+ *  @description: Resets a CircularBuffer.
+ *
+ *  @param:		  CircularBuffer.
+ *
+ *  @return:      None.
+ *
+ *  */
+
 void ResetFIFO(CircularBuffer* buffer)
 {
 	buffer->rxPtr = 0;
@@ -27,17 +48,39 @@ void ResetFIFO(CircularBuffer* buffer)
     buffer->numOfBytes = 0;
 }
 
+
+/*  GetFIFOByte
+ *
+ *  @description: Gets a byte from a CircularBuffer.
+ *
+ *  @param:		  CircularBuffer.
+ *
+ *  @return:      data.
+ *
+ *  */
+
 uint8_t GetFIFOByte(CircularBuffer* buffer)
 {
-    uint8_t result;
+    uint8_t data;
 	//interruptsDisable();
-    result = buffer->bufferPtr[buffer->rxPtr];
+    data = buffer->bufferPtr[buffer->rxPtr];
     buffer->numOfBytes--;
     buffer->rxPtr++;
     buffer->rxPtr %= buffer->bufferLen;
     //interruptsEnable();
-    return result;
+    return data;
 }
+
+
+/*  AddFIFOByte
+ *
+ *  @description: Adds a byte to a CircularBuffer.
+ *
+ *  @param:		  CircularBuffer, data.
+ *
+ *  @return:      None.
+ *
+ *  */
 
 void AddFIFOByte(CircularBuffer* buffer, uint8_t data)
 {
@@ -50,11 +93,31 @@ void AddFIFOByte(CircularBuffer* buffer, uint8_t data)
 }
 
 
+/*  GetFIFOPendingBytes
+ *
+ *  @description: Gets the number of filled bytes in a CircularBuffer.
+ *
+ *  @param:		  CircularBuffer.
+ *
+ *  @return:      numOfBytes.
+ *
+ *  */
 
 uint16_t GetFIFOPendingBytes(CircularBuffer* buffer)
 {
     return buffer->numOfBytes;
 }
+
+
+/*  GetFIFOFreeBytes
+ *
+ *  @description: Gets the number of empty bytes in a CircularBuffer.
+ *
+ *  @param:		  CircularBuffer.
+ *
+ *  @return:      bufferLen - numOfBytes.
+ *
+ *  */
 
 uint16_t GetFIFOFreeBytes(CircularBuffer* buffer)
 {
