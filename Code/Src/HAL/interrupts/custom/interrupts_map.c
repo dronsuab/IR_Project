@@ -13,6 +13,7 @@
 #include "interrupts.h"
 #include "interrupts_map.h"
 #include "uart.h"
+#include "irda.h"
 
 
 sInterruptsInstanceMap interruptsInstanceMap[NUM_OF_IRQS] =
@@ -26,8 +27,8 @@ sInterruptsInstanceMap interruptsInstanceMap[NUM_OF_IRQS] =
 
 void HAL_UART1_IRQ(void)
 {
-#ifdef IS_UART1
-	uartInterruptHandler(UART_1);
+#ifdef IS_IRDA1
+	irdaInterruptHandler(IRDA1);
 #endif
 }
 

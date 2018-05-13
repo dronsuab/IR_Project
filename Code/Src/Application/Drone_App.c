@@ -11,7 +11,7 @@
 char SerialTXBuffer[50];
 char SerialRXBuffer[50];
 char IrDATXBuffer[50];
-char IrDARXBuffer[50];
+char IrDARXBuffer[10];
 
 tBool pushed = FALSE;
 
@@ -44,6 +44,8 @@ void systemInit(void)
 	  GPIOInit();
 	  uartInit();
 	  uartStart();
+	  irdaInit();
+	  irdaStart();
 	  interruptsInit();
 	  interruptsStart();
 }
@@ -69,41 +71,41 @@ void taskCreation(void)
 
     /* Create tasks */
 
-    xTaskCreate(
-    		sendDataUART,                 /* Function pointer */
-  		  "sendDataUART",                          /* Task name - for debugging only*/
-  		  configMINIMAL_STACK_SIZE,         /* Stack depth in words */
-  		  &osSemaphore,                     /* Pointer to tasks arguments (parameter) */
-  		  tskIDLE_PRIORITY + 5,           /* Task priority*/
-  		  NULL                              /* Task handle */
-    );
-
-    xTaskCreate(
-    		receiveDataUART,                 /* Function pointer */
-   		  "receiveDataUART",                          /* Task name - for debugging only*/
-   		  configMINIMAL_STACK_SIZE,         /* Stack depth in words */
-   		  &osSemaphore,                     /* Pointer to tasks arguments (parameter) */
-   		  tskIDLE_PRIORITY + 5,           /* Task priority*/
-   		  NULL                              /* Task handle */
-     );
-
 //    xTaskCreate(
-//    	  sendIRData,                 /* Function pointer */
-//  		  "sendIRData",                          /* Task name - for debugging only*/
+//    		sendDataUART,                 /* Function pointer */
+//  		  "sendDataUART",                          /* Task name - for debugging only*/
 //  		  configMINIMAL_STACK_SIZE,         /* Stack depth in words */
-//  		  NULL,                     /* Pointer to tasks arguments (parameter) */
+//  		  &osSemaphore,                     /* Pointer to tasks arguments (parameter) */
 //  		  tskIDLE_PRIORITY + 5,           /* Task priority*/
 //  		  NULL                              /* Task handle */
 //    );
 //
 //    xTaskCreate(
-//    	  receiveIRData,                 /* Function pointer */
-//   		  "receiveIRData",                          /* Task name - for debugging only*/
+//    		receiveDataUART,                 /* Function pointer */
+//   		  "receiveDataUART",                          /* Task name - for debugging only*/
 //   		  configMINIMAL_STACK_SIZE,         /* Stack depth in words */
-//   		  NULL,                     /* Pointer to tasks arguments (parameter) */
+//   		  &osSemaphore,                     /* Pointer to tasks arguments (parameter) */
 //   		  tskIDLE_PRIORITY + 5,           /* Task priority*/
 //   		  NULL                              /* Task handle */
 //     );
+
+    xTaskCreate(
+    	  sendIRData,                 /* Function pointer */
+  		  "sendIRData",                          /* Task name - for debugging only*/
+  		  configMINIMAL_STACK_SIZE,         /* Stack depth in words */
+  		  NULL,                     /* Pointer to tasks arguments (parameter) */
+  		  tskIDLE_PRIORITY + 5,           /* Task priority*/
+  		  NULL                              /* Task handle */
+    );
+
+    xTaskCreate(
+    	  receiveIRData,                 /* Function pointer */
+   		  "receiveIRData",                          /* Task name - for debugging only*/
+   		  configMINIMAL_STACK_SIZE,         /* Stack depth in words */
+   		  NULL,                     /* Pointer to tasks arguments (parameter) */
+   		  tskIDLE_PRIORITY + 5,           /* Task priority*/
+   		  NULL                              /* Task handle */
+     );
 }
 
 
@@ -159,28 +161,53 @@ void receiveDataUART(void *pvParameters){
 	}
 
 }
-//
-//void sendIRData(void *pvParameters){
-//
-//	while(1){
-//		if (IR_Ready)
-//		{
-//			memcpy (IRTXBuffer, SerialRXBuffer, strlen(SerialRXBuffer) + 1);
-//			IR_Ready = FALSE;
-//		}
-//		vTaskDelay(1600 / portTICK_RATE_MS);
-//	}
-//}
-//
-//void receiveIRData(void *pvParameters){
-//
-//	while(1){
-//		sprintf(IRRXBuffer, "0/1/2/3/4/");
-//		Serial_Ready = TRUE;
-//		vTaskDelay(1600 / portTICK_RATE_MS);
-//	}
-//
-//}
+
+
+/*  sendDataUART
+ *
+ *  @description: Sends a defined buffer through serial port when a semaphore is released.
+ *
+ *  @param:		  osSemaphore.
+ *
+ *  @return:  	  None.
+ *
+ *  */
+
+void sendIRData(void *pvParameters){
+	strcpy(IrDATXBuffer, "123456789/");
+	while(1){
+		if (GPIORead(USER_BUTTON_B1)==GPIO_HIGH)
+		{
+			irdaWrite(IRDA1, IrDATXBuffer);
+			GPIOWrite(GPIO_LED_3, GPIO_HIGH);
+		}
+		 vTaskDelay (100 / portTICK_PERIOD_MS);
+	}
+}
+
+
+/*  receiveIRData
+ *
+ *  @description: Parses IrDA buffer if it has been filled and releases TX semaphore.
+ *
+ *  @param:		  osSemaphore.
+ *
+ *  @return:	  None.
+ *
+ *  */
+
+void receiveIRData(void *pvParameters){
+
+	while(1){
+		if (irdaRead(IRDA1, IrDARXBuffer, '/') == HAL_OK)
+		{
+			GPIOWrite(GPIO_LED_4, GPIO_HIGH);
+		}
+	}
+
+}
+
+
 /** System Clock Configuration
 */
 void SystemClock_Config(void)

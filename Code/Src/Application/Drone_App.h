@@ -20,6 +20,7 @@
 #include "common.h"
 #include "GPIO.h"
 #include "uart.h"
+#include "irda.h"
 #include "interrupts.h"
 #include <stdio.h>
 #include "BridgeMode.h"
@@ -32,8 +33,8 @@ void receiveDataUART(void *pvParameters);
 void systemInit(void);
 void taskCreation(void);
 
-//static void sendIRData(void *pvParameters);
-//static void receiveIRData(void *pvParameters);
+void sendIRData(void *pvParameters);
+void receiveIRData(void *pvParameters);
 
 
 

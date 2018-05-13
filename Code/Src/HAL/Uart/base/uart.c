@@ -105,10 +105,22 @@ HAL_StatusTypeDef uartStart(void)
         {
             return HAL_ERROR;
         }
-        if(HAL_UART_Init(uart_handler) != HAL_OK)
-        {
-            return HAL_ERROR;
-        }
+//        if (i == UART_1)
+//        {
+//        	if (HAL_HalfDuplex_Init(uart_handler) == HAL_OK)
+//        	{
+//        		HAL_HalfDuplex_EnableReceiver(uart_handler);
+//        		return HAL_OK;
+//        	}
+//        }
+//        else
+//        {
+			if(HAL_UART_Init(uart_handler) != HAL_OK)
+			{
+				return HAL_ERROR;
+			}
+//        }
+
         HAL_UART_Receive_IT(uart_handler, &RxByte, 1 );
     }
     return HAL_OK;
@@ -142,6 +154,7 @@ HAL_StatusTypeDef uartRead(eUart uartPort, char* buffer, uint8_t lastChar)
 
 HAL_StatusTypeDef uartWrite(eUart uartPort, char* buffer)
 {
+
     HAL_StatusTypeDef error;
     error = HAL_UART_Transmit_IT(&uartHandlers[uartPort], (uint8_t*)buffer, strlen(buffer));
     while (HAL_UART_GetState(&uartHandlers[uartPort]) == HAL_UART_STATE_BUSY_TX ||
@@ -155,55 +168,21 @@ HAL_StatusTypeDef uartDriverWritePolling(eUart uartPort, char* buffer)
     return HAL_UART_Transmit(&uartHandlers[uartPort], (uint8_t*)buffer, strlen(buffer), HAL_MAX_DELAY);
 }
 
-void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
-{
 
-}
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *uart_handler)
 {
-
-//	UART_RX_CP = FALSE;
-
-//	if (tiempo)
-//		GPIOWrite(GPIO_1, GPIO_HIGH);
-//	else
-//		GPIOWrite(GPIO_1, GPIO_LOW);
-//
-//	tiempo = !tiempo;
-
-
-//	if (contador != 0)
-//	{
-//		if (contador == 1)
-//		{
-//			contador++;
-//			GPIOWrite(GPIO_1, GPIO_HIGH);
-//		}
-//		if(GetFIFOFreeBytes(&uartCircularBuffers[uartPortIRQ].rxBuffer) > 0){
-//			AddFIFOByte(&uartCircularBuffers[uartPortIRQ].rxBuffer, RxByte);
-//		}
-//
-//	}
-//
-//	if (contador == 0)
-//		contador++;
-
-
 	if (tiempo)
 	{
 		GPIOWrite(GPIO_1, GPIO_HIGH);
 		if(GetFIFOFreeBytes(&uartCircularBuffers[uartPortIRQ].rxBuffer) > 0){
 			AddFIFOByte(&uartCircularBuffers[uartPortIRQ].rxBuffer, RxByte);
 		}
-//		if((char)RxByte == '/')
-//			UART_RX_CP = TRUE;
 	}
 	else
 		tiempo = !tiempo;
 
 	 HAL_UART_Receive_IT(uart_handler, &RxByte, 1 );
-
 
 
 }
