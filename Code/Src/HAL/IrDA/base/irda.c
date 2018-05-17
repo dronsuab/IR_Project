@@ -98,7 +98,6 @@ HAL_StatusTypeDef irdaStart(void)
 HAL_StatusTypeDef irdaRead(eIrda irdaPort, char* buffer, uint8_t lastChar)
 {
     uint32_t i=0;
-    uint8_t byte=0;
     uint32_t bufferSize = 10;
     uint8_t result = HAL_ERROR;
 
@@ -123,13 +122,8 @@ HAL_StatusTypeDef irdaRead(eIrda irdaPort, char* buffer, uint8_t lastChar)
 HAL_StatusTypeDef irdaWrite(eIrda irdaPort, char* buffer)
 {
     HAL_StatusTypeDef error;
-//    char c = 'h';
-    //HAL_HalfDuplex_EnableTransmitter((UART_HandleTypeDef *)&irdaHandlers[irdaPort]);
-//    error = HAL_IRDA_Transmit(&irdaHandlers[irdaPort], &c, 1, 10);
     error = HAL_IRDA_Transmit_IT(&irdaHandlers[irdaPort], (uint8_t*)buffer, strlen(buffer));
-    HAL_Delay(10);
-//    while (HAL_IRDA_GetState(&irdaHandlers[irdaPort]) == HAL_IRDA_STATE_BUSY_TX ||
-//    HAL_IRDA_GetState(&irdaHandlers[irdaPort]) == HAL_IRDA_STATE_BUSY_TX_RX);
+    //HAL_Delay(10);
     return error;
 
 }

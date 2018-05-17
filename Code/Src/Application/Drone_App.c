@@ -15,7 +15,8 @@ char IrDARXBuffer[10];
 
 tBool pushed = FALSE;
 
-osSemaphoreId osSemaphore;
+osSemaphoreId osSemaphore1;
+osSemaphoreId osSemaphore2;
 
 
 /*  systemInit
@@ -65,35 +66,39 @@ void taskCreation(void)
 {
 
 	  /*Create semaphores for tasks*/
-	  osSemaphoreDef(SEM);
-	  osSemaphore = osSemaphoreCreate(osSemaphore(SEM) , 1);
+
+	  osSemaphoreDef(SEM1);
+	  osSemaphoreDef(SEM2);
+	  osSemaphore1 = osSemaphoreCreate(osSemaphore(SEM1) , 1);
+	  osSemaphore2 = osSemaphoreCreate(osSemaphore(SEM2) , 1);
+
 
 
     /* Create tasks */
 
-//    xTaskCreate(
-//    		sendDataUART,                 /* Function pointer */
-//  		  "sendDataUART",                          /* Task name - for debugging only*/
-//  		  configMINIMAL_STACK_SIZE,         /* Stack depth in words */
-//  		  &osSemaphore,                     /* Pointer to tasks arguments (parameter) */
-//  		  tskIDLE_PRIORITY + 5,           /* Task priority*/
-//  		  NULL                              /* Task handle */
-//    );
-//
-//    xTaskCreate(
-//    		receiveDataUART,                 /* Function pointer */
-//   		  "receiveDataUART",                          /* Task name - for debugging only*/
-//   		  configMINIMAL_STACK_SIZE,         /* Stack depth in words */
-//   		  &osSemaphore,                     /* Pointer to tasks arguments (parameter) */
-//   		  tskIDLE_PRIORITY + 5,           /* Task priority*/
-//   		  NULL                              /* Task handle */
-//     );
+    xTaskCreate(
+    		sendDataUART,                 /* Function pointer */
+  		  "sendDataUART",                          /* Task name - for debugging only*/
+		  ((uint16_t)64),         /* Stack depth in words */
+  		  &osSemaphore2,                     /* Pointer to tasks arguments (parameter) */
+  		  tskIDLE_PRIORITY + 5,           /* Task priority*/
+  		  NULL                              /* Task handle */
+    );
+
+    xTaskCreate(
+    		receiveDataUART,                 /* Function pointer */
+   		  "receiveDataUART",                          /* Task name - for debugging only*/
+		  ((uint16_t)64),         /* Stack depth in words */
+   		  &osSemaphore1,                     /* Pointer to tasks arguments (parameter) */
+   		  tskIDLE_PRIORITY + 5,           /* Task priority*/
+   		  NULL                              /* Task handle */
+     );
 
     xTaskCreate(
     	  sendIRData,                 /* Function pointer */
   		  "sendIRData",                          /* Task name - for debugging only*/
-  		  configMINIMAL_STACK_SIZE,         /* Stack depth in words */
-  		  NULL,                     /* Pointer to tasks arguments (parameter) */
+		  ((uint16_t)64),         /* Stack depth in words */
+		  &osSemaphore1,                     /* Pointer to tasks arguments (parameter) */
   		  tskIDLE_PRIORITY + 5,           /* Task priority*/
   		  NULL                              /* Task handle */
     );
@@ -101,8 +106,8 @@ void taskCreation(void)
     xTaskCreate(
     	  receiveIRData,                 /* Function pointer */
    		  "receiveIRData",                          /* Task name - for debugging only*/
-   		  configMINIMAL_STACK_SIZE,         /* Stack depth in words */
-   		  NULL,                     /* Pointer to tasks arguments (parameter) */
+		  ((uint16_t)64),         /* Stack depth in words */
+		  &osSemaphore2,                     /* Pointer to tasks arguments (parameter) */
    		  tskIDLE_PRIORITY + 5,           /* Task priority*/
    		  NULL                              /* Task handle */
      );
@@ -126,12 +131,6 @@ void sendDataUART(void *pvParameters){
 		if (osSemaphoreWait(semaphore , 0) == osOK)
 		{
 			uartWrite(UART_2, SerialTXBuffer);
-			//IRDA_TO_UART_CP = FALSE;
-			pushed = !pushed;
-			if (pushed)
-				GPIOWrite(GPIO_LED_3, GPIO_HIGH);
-			else
-				GPIOWrite(GPIO_LED_3, GPIO_LOW);
 		}
 	}
 }
@@ -152,10 +151,8 @@ void receiveDataUART(void *pvParameters){
 	while(1){
 		if (uartRead(UART_2, SerialRXBuffer, '/') == HAL_OK)
 		{
-				GPIOWrite(GPIO_LED_4, GPIO_HIGH);
-				GPIOWrite(GPIO_1, GPIO_LOW);
-				enterBridgeMode(SerialRXBuffer, strlen(SerialRXBuffer), IrDATXBuffer, strlen(IrDATXBuffer));
-				osSemaphoreRelease(semaphore);
+				if(enterBridgeMode(SerialRXBuffer, strlen(SerialRXBuffer), IrDATXBuffer, strlen(IrDATXBuffer)) == TRUE)
+					osSemaphoreRelease(semaphore);
 		}
 
 	}
@@ -174,14 +171,12 @@ void receiveDataUART(void *pvParameters){
  *  */
 
 void sendIRData(void *pvParameters){
-	strcpy(IrDATXBuffer, "123456789/");
+	osSemaphoreId semaphore = *((osSemaphoreId*) pvParameters);
 	while(1){
-		if (GPIORead(USER_BUTTON_B1)==GPIO_HIGH)
+		if (osSemaphoreWait(semaphore , 0) == osOK)
 		{
 			irdaWrite(IRDA1, IrDATXBuffer);
-			GPIOWrite(GPIO_LED_3, GPIO_HIGH);
 		}
-		 vTaskDelay (100 / portTICK_PERIOD_MS);
 	}
 }
 
@@ -197,11 +192,12 @@ void sendIRData(void *pvParameters){
  *  */
 
 void receiveIRData(void *pvParameters){
-
+	osSemaphoreId semaphore = *((osSemaphoreId*) pvParameters);
 	while(1){
 		if (irdaRead(IRDA1, IrDARXBuffer, '/') == HAL_OK)
 		{
-			GPIOWrite(GPIO_LED_4, GPIO_HIGH);
+			enterBridgeMode(IrDATXBuffer, strlen(IrDATXBuffer), SerialRXBuffer, strlen(SerialRXBuffer));
+			osSemaphoreRelease(semaphore);
 		}
 	}
 

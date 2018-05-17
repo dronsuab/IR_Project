@@ -38,12 +38,12 @@ tBool enterBridgeMode(char *RxBuffer, uint8_t Rxlength, char *TxBuffer, uint8_t 
 	uint8_t i = 0;
 	uint8_t lastcharacter;
 	uint8_t searchedcharacter;
-	tBool error = TRUE;
-	char SerialTXBuffer[50];
+	tBool error = FALSE;
 
 	initStructs();
 	initString(tag, 10);
 	initString((char*)index, MAX_CHARS);
+	initString(TxBuffer, TxLength);
 
 
 	lastcharacter = searchChar(RxBuffer, Rxlength, '/');
@@ -68,8 +68,14 @@ tBool enterBridgeMode(char *RxBuffer, uint8_t Rxlength, char *TxBuffer, uint8_t 
 	{
 		strncpy(Disparo.controller, &RxBuffer[index[0]+1], (index[1]-index[0]-1));
 		strncpy(Disparo.weapon, &RxBuffer[index[1]+1], lastcharacter-index[1]-1);
-		strcpy(SerialTXBuffer, "DISPARO,DronA/");
-		//uartWrite(UART_2, SerialTXBuffer);
+
+		strcpy(TxBuffer, "SHOT");
+		strcat(TxBuffer, Disparo.controller);
+		strcat(TxBuffer, Disparo.weapon);
+
+		error = TRUE;
+
+
 		GPIOWrite(GPIO_LED_3, GPIO_HIGH);
 
 	}
@@ -105,6 +111,16 @@ tBool enterBridgeMode(char *RxBuffer, uint8_t Rxlength, char *TxBuffer, uint8_t 
 		strncpy(Muerto.controller, &RxBuffer[index[0]+1], (index[1]-index[0]-1));
 		strncpy(Muerto.drone, &RxBuffer[index[1]+1], lastcharacter-index[1]-1);
 
+	}
+	else if (strcmp(tag, "SHOT") == 0)
+	{
+		strncpy(Disparo.controller, &RxBuffer[index[0]+1], (index[1]-index[0]-1));
+		strncpy(Disparo.weapon, &RxBuffer[index[1]+1], lastcharacter-index[1]-1);
+		strcpy(TxBuffer, "FIRE");
+		strcat(TxBuffer, Disparo.controller);
+		strcat(TxBuffer, DRONE_ID);
+		strcat(TxBuffer, Disparo.weapon);
+		strcat(TxBuffer, SIDE);
 	}
 	else if (strcmp(tag, "FJUEGO") == 0)
 	{
