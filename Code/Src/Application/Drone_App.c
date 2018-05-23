@@ -10,7 +10,7 @@
 /* Private variables */
 char SerialTXBuffer[50];
 char SerialRXBuffer[50];
-char IrDATXBuffer[50];
+char IrDATXBuffer[10];
 char IrDARXBuffer[10];
 
 tBool pushed = FALSE;

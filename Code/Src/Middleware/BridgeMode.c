@@ -39,11 +39,13 @@ tBool enterBridgeMode(char *RxBuffer, uint8_t Rxlength, char *TxBuffer, uint8_t 
 	uint8_t lastcharacter;
 	uint8_t searchedcharacter;
 	tBool error = FALSE;
+	char zeros[10];
 
 	initStructs();
 	initString(tag, 10);
 	initString((char*)index, MAX_CHARS);
 	initString(TxBuffer, TxLength);
+	initString(zeros, 10);
 
 
 	lastcharacter = searchChar(RxBuffer, Rxlength, '/');
@@ -70,8 +72,9 @@ tBool enterBridgeMode(char *RxBuffer, uint8_t Rxlength, char *TxBuffer, uint8_t 
 		strncpy(Disparo.weapon, &RxBuffer[index[1]+1], lastcharacter-index[1]-1);
 
 		strcpy(TxBuffer, "SHOT");
-		strcat(TxBuffer, Disparo.controller);
+		strcat(TxBuffer, "A");
 		strcat(TxBuffer, Disparo.weapon);
+		strncpy(&TxBuffer[strlen(TxBuffer)], zeros, (10-strlen(TxBuffer)));
 
 		error = TRUE;
 
@@ -121,6 +124,8 @@ tBool enterBridgeMode(char *RxBuffer, uint8_t Rxlength, char *TxBuffer, uint8_t 
 		strcat(TxBuffer, DRONE_ID);
 		strcat(TxBuffer, Disparo.weapon);
 		strcat(TxBuffer, SIDE);
+
+		error = TRUE;
 	}
 	else if (strcmp(tag, "FJUEGO") == 0)
 	{
