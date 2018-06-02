@@ -1,0 +1,27 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP L298HN
+D LM298HN, Dual Full Bridge Motor Driver, Max. 46V, 4A, Multiwatt-15
+K H-bridge motor driver
+F http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/CD00000240.pdf
+$ENDCMP
+#
+$CMP L298N
+D LM298N, Dual Full Bridge Motor Driver, Max. 46V, 4A, Multiwatt-15
+K H-bridge motor driver
+F http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/CD00000240.pdf
+$ENDCMP
+#
+$CMP L298P
+D LM298P, Dual Full Bridge Motor Driver, Max. 46V, 4A, PowerSO-20
+K H-bridge motor driver
+F http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/CD00000240.pdf
+$ENDCMP
+#
+$CMP VNH2SP30-E
+D VNH2SP30-E, 41V 30A H-Bridge Motor Driver, MultiPower SO-30
+K H-Bridge Motor Driver
+F http://www.st.com/content/ccc/resource/technical/document/datasheet/group2/66/b8/f5/2c/9a/66/41/c7/CD00043711/files/CD00043711.pdf/jcr:content/translations/en.CD00043711.pdf
+$ENDCMP
+#
+#End Doc Library

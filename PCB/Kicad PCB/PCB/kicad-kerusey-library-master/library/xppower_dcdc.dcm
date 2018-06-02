@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP ISA0505
+D ISA0505, 5V/+-5V DC-DC Separator, 1W
+K DC Separator
+F http://www.xppower.com/Portals/0/pdfs/SF_ISA.pdf?ver=2015-08-21-100236-600
+$ENDCMP
+#
+#End Doc Library

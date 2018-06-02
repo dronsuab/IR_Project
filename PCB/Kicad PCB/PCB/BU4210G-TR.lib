@@ -1,0 +1,31 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#(c) SnapEDA 2016 (snapeda.com)
+#This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA) with Design Exception 1.0
+#
+# BU4210G-TR
+#
+DEF BU4210G-TR U 0 40 Y Y 1 L N
+F0 "U" -213 470 50 H V L BNN
+F1 "BU4210G-TR" -168 -709 50 H V L BNN
+F2 "SOT95P280X125-5N" 0 0 50 H I L BNN
+F3 "BU4210G-TR" 0 0 50 H I L BNN
+F4 "SSOP-5 Rohm" 0 0 50 H I L BNN
+F5 "BU42 Series 1 V 70 mA Surface Mount CMOS Voltage Detector - SSOP-5" 0 0 50 H I L BNN
+F6 "Rohm" 0 0 50 H I L BNN
+F7 "0.33 USD" 0 0 50 H I L BNN
+F8 "Good" 0 0 50 H I L BNN
+DRAW
+P 2 0 0 16 -500 400 -500 -600 N
+P 2 0 0 16 -500 -600 500 -600 N
+P 2 0 0 16 500 -600 500 400 N
+P 2 0 0 16 500 400 -500 400 N
+X VDD 2 -700 200 200 R 40 40 0 0 W 
+X CT 5 -700 0 200 R 40 40 0 0 I 
+X N.C 4 -700 -200 200 R 40 40 0 0 N 
+X GND 3 -700 -400 200 R 40 40 0 0 P 
+X VOUT 1 700 200 200 L 40 40 0 0 O 
+ENDDRAW
+ENDDEF
+#
+# End Library

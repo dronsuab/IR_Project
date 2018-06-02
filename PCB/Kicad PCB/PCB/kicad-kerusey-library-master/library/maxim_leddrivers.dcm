@@ -1,0 +1,39 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP MAX6958BAEE
+D MAX6958BAEE, I2C 9-Segment LED Display Driver, QSOP-16
+K LED Driver I2C
+F https://datasheets.maximintegrated.com/en/ds/MAX6958-MAX6959.pdf
+$ENDCMP
+#
+$CMP MAX6958BAPE
+D MAX6958BAPE, I2C 9-Segment LED Display Driver, DIP-16
+K LED Driver I2C
+F https://datasheets.maximintegrated.com/en/ds/MAX6958-MAX6959.pdf
+$ENDCMP
+#
+$CMP MAX6959AAEE
+D MAX6959AAEE, I2C 9-Segment LED Display Driver with Keyboard, QSOP-16
+K LED Driver I2C Keyboard
+F https://datasheets.maximintegrated.com/en/ds/MAX6958-MAX6959.pdf
+$ENDCMP
+#
+$CMP MAX6959AAPE
+D MAX6959AAPE, I2C 9-Segment LED Display Driver with Keyboard, DIP-16
+K LED Driver I2C Keyboard
+F https://datasheets.maximintegrated.com/en/ds/MAX6958-MAX6959.pdf
+$ENDCMP
+#
+$CMP MAX6959BAEE
+D MAX6959BAEE, I2C 9-Segment LED Display Driver with Keyboard, QSOP-16
+K LED Driver I2C Keyboard
+F https://datasheets.maximintegrated.com/en/ds/MAX6958-MAX6959.pdf
+$ENDCMP
+#
+$CMP MAX6959BAPE
+D MAX6959BAPE, I2C 9-Segment LED Display Driver with Keyboard, DIP-16
+K LED Driver I2C Keyboard
+F https://datasheets.maximintegrated.com/en/ds/MAX6958-MAX6959.pdf
+$ENDCMP
+#
+#End Doc Library
