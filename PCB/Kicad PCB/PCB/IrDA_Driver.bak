@@ -1,0 +1,72 @@
+EESchema Schematic File Version 2
+LIBS:prueba-rescue
+LIBS:stm8
+LIBS:stm32
+LIBS:power
+LIBS:device
+LIBS:switches
+LIBS:relays
+LIBS:motors
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+LIBS:rohm
+LIBS:BU4210G-TR
+LIBS:arduino
+LIBS:nodemcu
+LIBS:LIS3DH
+LIBS:st_regul
+LIBS:USB_MINI
+LIBS:SC16
+LIBS:TFDU4101-TR3
+LIBS:prueba-cache
+EELAYER 25 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 4 4
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L SC16IS750 SC16IS750?
+U 1 1 5B153456
+P 3150 2100
+F 0 "SC16IS750?" H 2937 2570 50  0000 L BNN
+F 1 "SC16IS750" H 3100 700 50  0000 L BNN
+F 2 "SC16IS750" H 4300 2350 50  0001 L BNN
+F 3 "SC16IS750" H 4500 2250 50  0001 L BNN
+	1    3150 2100
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC

@@ -1,0 +1,261 @@
+EESchema Schematic File Version 2
+LIBS:prueba-rescue
+LIBS:stm8
+LIBS:stm32
+LIBS:power
+LIBS:device
+LIBS:switches
+LIBS:relays
+LIBS:motors
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+LIBS:rohm
+LIBS:BU4210G-TR
+LIBS:arduino
+LIBS:nodemcu
+LIBS:LIS3DH
+LIBS:st_regul
+LIBS:USB_MINI
+LIBS:SC16
+LIBS:TFDU4101-TR3
+LIBS:prueba-cache
+EELAYER 25 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 4 4
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L SC16IS750 SC16IS750?
+U 1 1 5B153456
+P 3150 2100
+F 0 "SC16IS750?" H 2937 2570 50  0000 L BNN
+F 1 "SC16IS750" H 3100 700 50  0000 L BNN
+F 2 "SC16IS750" H 4300 2350 50  0001 L BNN
+F 3 "SC16IS750" H 4500 2250 50  0001 L BNN
+	1    3150 2100
+	1    0    0    -1  
+$EndComp
+$Comp
+L TFDU4101-TR3 U?
+U 1 1 5B15A5CD
+P 8400 1700
+F 0 "U?" H 9050 2000 50  0000 L CNN
+F 1 "TFDU4101-TR3" H 9050 1900 50  0000 L CNN
+F 2 "TFDU4101-TR3" H 9050 1800 50  0001 L CNN
+F 3 "http://uk.rs-online.com/web/p/products/0404691P" H 9050 1700 50  0001 L CNN
+F 4 "VISHAY Infrared Transceiver Module - TFDU4101-TR3 - TX,INFRARED, 115.2KBPS, MSL-4" H 9050 1600 50  0001 L CNN "Description"
+F 5 "0404691P" H 9050 1400 50  0001 L CNN "RS Part Number"
+F 6 "Vishay" H 9050 1300 50  0001 L CNN "Manufacturer_Name"
+F 7 "TFDU4101-TR3" H 9050 1200 50  0001 L CNN "Manufacturer_Part_Number"
+	1    8400 1700
+	1    0    0    -1  
+$EndComp
+$Comp
+L TFDU4101-TR3 U?
+U 1 1 5B15A662
+P 8400 4000
+F 0 "U?" H 9050 4300 50  0000 L CNN
+F 1 "TFDU4101-TR3" H 9050 4200 50  0000 L CNN
+F 2 "TFDU4101-TR3" H 9050 4100 50  0001 L CNN
+F 3 "http://uk.rs-online.com/web/p/products/0404691P" H 9050 4000 50  0001 L CNN
+F 4 "VISHAY Infrared Transceiver Module - TFDU4101-TR3 - TX,INFRARED, 115.2KBPS, MSL-4" H 9050 3900 50  0001 L CNN "Description"
+F 5 "0404691P" H 9050 3700 50  0001 L CNN "RS Part Number"
+F 6 "Vishay" H 9050 3600 50  0001 L CNN "Manufacturer_Name"
+F 7 "TFDU4101-TR3" H 9050 3500 50  0001 L CNN "Manufacturer_Part_Number"
+	1    8400 4000
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R?
+U 1 1 5B15A8A2
+P 7100 1650
+F 0 "R?" V 7180 1650 50  0000 C CNN
+F 1 "47" V 7100 1650 50  0000 C CNN
+F 2 "" V 7030 1650 50  0001 C CNN
+F 3 "" H 7100 1650 50  0001 C CNN
+	1    7100 1650
+	0    1    1    0   
+$EndComp
+$Comp
+L C C?
+U 1 1 5B15A9DC
+P 8000 2350
+F 0 "C?" H 8025 2450 50  0000 L CNN
+F 1 "4.7u" H 8025 2250 50  0000 L CNN
+F 2 "" H 8038 2200 50  0001 C CNN
+F 3 "" H 8000 2350 50  0001 C CNN
+	1    8000 2350
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C?
+U 1 1 5B15AB08
+P 7650 1800
+F 0 "C?" H 7675 1900 50  0000 L CNN
+F 1 "0.1u" H 7400 1800 50  0000 L CNN
+F 2 "" H 7688 1650 50  0001 C CNN
+F 3 "" H 7650 1800 50  0001 C CNN
+	1    7650 1800
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R?
+U 1 1 5B15AB84
+P 7800 2150
+F 0 "R?" V 7880 2150 50  0000 C CNN
+F 1 "47" V 7800 2150 50  0000 C CNN
+F 2 "" V 7730 2150 50  0001 C CNN
+F 3 "" H 7800 2150 50  0001 C CNN
+	1    7800 2150
+	0    1    1    0   
+$EndComp
+Text Label 6850 1650 2    60   ~ 0
+VDD
+Text Label 7550 2150 2    60   ~ 0
+VDD
+Text Label 7650 2000 0    60   ~ 0
+GND
+Text Label 8200 2800 3    60   ~ 0
+GND
+NoConn ~ 8350 2250
+NoConn ~ 8350 1750
+$Comp
+L R R?
+U 1 1 5B15B047
+P 7050 3950
+F 0 "R?" V 7130 3950 50  0000 C CNN
+F 1 "47" V 7050 3950 50  0000 C CNN
+F 2 "" V 6980 3950 50  0001 C CNN
+F 3 "" H 7050 3950 50  0001 C CNN
+	1    7050 3950
+	0    1    1    0   
+$EndComp
+$Comp
+L C C?
+U 1 1 5B15B0E3
+P 7550 4100
+F 0 "C?" H 7575 4200 50  0000 L CNN
+F 1 "0.1u" H 7300 4100 50  0000 L CNN
+F 2 "" H 7588 3950 50  0001 C CNN
+F 3 "" H 7550 4100 50  0001 C CNN
+	1    7550 4100
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R?
+U 1 1 5B15B1D0
+P 7750 4450
+F 0 "R?" V 7830 4450 50  0000 C CNN
+F 1 "47" V 7750 4450 50  0000 C CNN
+F 2 "" V 7680 4450 50  0001 C CNN
+F 3 "" H 7750 4450 50  0001 C CNN
+	1    7750 4450
+	0    1    1    0   
+$EndComp
+$Comp
+L C C?
+U 1 1 5B15B264
+P 8000 4600
+F 0 "C?" H 8025 4700 50  0000 L CNN
+F 1 "4.7u" H 8025 4500 50  0000 L CNN
+F 2 "" H 8038 4450 50  0001 C CNN
+F 3 "" H 8000 4600 50  0001 C CNN
+	1    8000 4600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8350 2600 8350 2350
+Wire Wire Line
+	8000 2500 8000 2600
+Wire Wire Line
+	8000 2600 8350 2600
+Connection ~ 8350 2600
+Wire Wire Line
+	8350 2050 8200 2050
+Wire Wire Line
+	8200 2050 8200 2800
+Connection ~ 8200 2600
+Wire Wire Line
+	7250 1650 8350 1650
+Wire Wire Line
+	7950 2150 8350 2150
+Wire Wire Line
+	8000 2150 8000 2200
+Connection ~ 8000 2150
+Connection ~ 7650 1650
+Wire Wire Line
+	7650 1950 7650 2000
+Wire Wire Line
+	7650 2150 7550 2150
+Wire Wire Line
+	6950 1650 6850 1650
+Wire Wire Line
+	7200 3950 8350 3950
+Connection ~ 7550 3950
+Wire Wire Line
+	8350 4350 8250 4350
+Wire Wire Line
+	8250 4350 8250 4850
+Wire Wire Line
+	8250 4650 8350 4650
+Wire Wire Line
+	8250 4850 8000 4850
+Wire Wire Line
+	8000 4750 8000 4950
+Connection ~ 8250 4650
+Wire Wire Line
+	7900 4450 8350 4450
+Wire Wire Line
+	8000 4450 8000 4500
+Wire Wire Line
+	7600 4450 7500 4450
+Wire Wire Line
+	7550 4250 7550 4300
+Wire Wire Line
+	6900 3950 6850 3950
+NoConn ~ 8350 4050
+NoConn ~ 8350 4550
+Text Label 6850 3950 2    60   ~ 0
+VDD
+Text Label 7500 4450 2    60   ~ 0
+VDD
+Connection ~ 8000 4850
+Text Label 8000 4950 3    60   ~ 0
+GND
+Text Label 7550 4300 0    60   ~ 0
+GND
+$EndSCHEMATC
