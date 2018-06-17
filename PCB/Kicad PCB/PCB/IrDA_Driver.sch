@@ -314,10 +314,6 @@ Wire Wire Line
 	8000 4750 8000 4950
 Connection ~ 8250 4650
 Wire Wire Line
-	7900 4450 8350 4450
-Wire Wire Line
-	8000 4450 8000 4500
-Wire Wire Line
 	7600 4450 7500 4450
 Wire Wire Line
 	7550 4250 7550 4300
@@ -369,4 +365,7 @@ Text Label 3350 950  2    60   ~ 0
 GND
 Text HLabel 3850 950  2    60   Input ~ 0
 GND
+Wire Wire Line
+	7900 4450 8350 4450
+Connection ~ 8000 4450
 $EndSCHEMATC

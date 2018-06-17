@@ -254,9 +254,9 @@ USART1_RX
 Text HLabel 6500 4050 2    60   Output ~ 0
 USART1_TX
 NoConn ~ 6100 3550
-Text HLabel 6600 5850 2    60   Output ~ 0
+Text HLabel 7500 5850 2    60   Output ~ 0
 I2C2_SCL
-Text HLabel 6600 5950 2    60   BiDi ~ 0
+Text HLabel 7500 5950 2    60   BiDi ~ 0
 I2C2_SDA
 Text Label 3600 7100 3    60   ~ 0
 GND
@@ -499,9 +499,9 @@ Wire Wire Line
 Wire Wire Line
 	8600 1100 8950 1100
 Wire Wire Line
-	6100 5850 6600 5850
+	6100 5850 7500 5850
 Wire Wire Line
-	6100 5950 6600 5950
+	6100 5950 7500 5950
 Wire Wire Line
 	5300 1450 5300 1700
 Wire Wire Line
@@ -562,5 +562,41 @@ Wire Wire Line
 Text Label 7500 5050 1    60   ~ 0
 VDD
 Text Label 6600 5050 1    60   ~ 0
+VDD
+$Comp
+L R R23
+U 1 1 5B26722E
+P 6550 6200
+F 0 "R23" V 6630 6200 50  0000 C CNN
+F 1 "10K" V 6550 6200 50  0000 C CNN
+F 2 "" V 6480 6200 50  0001 C CNN
+F 3 "" H 6550 6200 50  0001 C CNN
+	1    6550 6200
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R24
+U 1 1 5B267299
+P 6850 6200
+F 0 "R24" V 6930 6200 50  0000 C CNN
+F 1 "10K" V 6850 6200 50  0000 C CNN
+F 2 "" V 6780 6200 50  0001 C CNN
+F 3 "" H 6850 6200 50  0001 C CNN
+	1    6850 6200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6550 6050 6550 5850
+Connection ~ 6550 5850
+Wire Wire Line
+	6850 6050 6850 5950
+Connection ~ 6850 5950
+Wire Wire Line
+	6550 6350 6550 6450
+Wire Wire Line
+	6850 6350 6850 6450
+Text Label 6550 6450 3    60   ~ 0
+VDD
+Text Label 6850 6450 3    60   ~ 0
 VDD
 $EndSCHEMATC
