@@ -1,4 +1,4 @@
-update=6/4/2018 11:11:45 AM
+update=6/18/2018 4:04:40 PM
 version=1
 last_client=kicad
 [pcbnew]
@@ -72,5 +72,4 @@ LibName40=kicad-lib-master/components/LIS3DH
 LibName41=kicad-kerusey-library-master/library/st_regul
 LibName42=kicad-lib-master/components/USB_MINI
 LibName43=kicad-lib-master/device
-LibName44=SC16
-LibName45=kicad-lib-master/TFDU4101-TR3
+LibName44=kicad-lib-master/TFDU4101-TR3
