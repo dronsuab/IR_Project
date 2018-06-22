@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--**************************************-->
+<!--   File    : prueba.fsproj            -->
+<!--   Format  : TopoR Project file       -->
+<!--   Version : 2                        -->
+<!--   Program : TopoR Lite 6.3.18019     -->
+<!--   Date    : Wednesday, June 20, 2018 -->
+<!--   Time    : 15:58                    -->
+<!--**************************************-->
+
+<Project>
+   <Version current="2"/>
+   <GUID>{4CB83D8A-23AD-4F01-B5E7-154F020CBDDE}</GUID>
+   <Documents>
+      <Section name="PCB">
+         <File path=".\prueba.fsx" isopened="1" dateChange="2018-06-20 15:25:40"/>
+      </Section>
+      <Section name="AutoRouting">
+         <File path=".\autoroute_180620152554\prueba_2182-18s.fsb" isopened="0" dateChange="2018-06-20 15:29:44"/>
+      </Section>
+   </Documents>
+</Project>
