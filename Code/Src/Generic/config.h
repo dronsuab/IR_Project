@@ -6,5 +6,5 @@
 #include "stm32f051x8.h"
 
 
-#define DRONE_ID "1"
+#define DRONE_ID "drone1"
 #define SIDE "right"

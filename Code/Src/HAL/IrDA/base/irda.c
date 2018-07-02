@@ -90,7 +90,7 @@ HAL_StatusTypeDef irdaStart(void)
         {
             return HAL_ERROR;
         }
-        HAL_IRDA_Receive_IT(irda_handler, (uint8_t *)irda1RxBuffer, 10 );
+        HAL_IRDA_Receive_IT(irda_handler, (uint8_t *)irda1RxBuffer, 28 );
     }
     return HAL_OK;
 }
@@ -98,18 +98,19 @@ HAL_StatusTypeDef irdaStart(void)
 HAL_StatusTypeDef irdaRead(eIrda irdaPort, char* buffer, uint8_t lastChar)
 {
     uint32_t i=0;
-    uint32_t bufferSize = 10;
+    uint32_t bufferSize = 28;
     uint8_t result = HAL_ERROR;
 
     if(strlen(irda1RxBuffer) < bufferSize ){
 		initString(buffer,bufferSize);
 		result = HAL_ERROR;
     }else{
-        while((irda1RxBuffer[i] != lastChar) && (i<bufferSize) )
+        while((irda1RxBuffer[i] != lastChar) && (i<30) )
         {
             buffer[i] = irda1RxBuffer[i];
             i++;
         }
+        buffer[i] = irda1RxBuffer[i];
         if (irda1RxBuffer[i] == lastChar)
         	result = HAL_OK;
         initString(irda1RxBuffer,bufferSize);
@@ -135,7 +136,9 @@ void HAL_IRDA_RxCpltCallback(IRDA_HandleTypeDef *irda_handler)
 //		AddFIFOByte(&irdaCircularBuffers[irdaPortIRQ].rxBuffer, RxByte);
 //	}
 //
-	HAL_IRDA_Receive_IT(irda_handler, (uint8_t *)irda1RxBuffer, 10 );
+
+	HAL_IRDA_Receive_IT(irda_handler, (uint8_t *)irda1RxBuffer, 28 );
+
 
 }
 

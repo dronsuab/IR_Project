@@ -29,8 +29,9 @@ typedef struct
 
 typedef struct
 {
-	char controller[10];
-	char weapon[10];
+	char controller[15];
+	char weapon[20];
+	char drone[15];
 }sDisparo;
 
 

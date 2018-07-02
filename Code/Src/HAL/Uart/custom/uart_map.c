@@ -11,12 +11,12 @@
 #include "uart_map.h"
 
 #ifdef IS_UART1
-    char usart1TxBuffer[USART1_TX_BUFFER];
-    char usart1RxBuffer[USART1_RX_BUFFER];
+    uint8_t usart1TxBuffer[USART1_TX_BUFFER];
+    uint8_t usart1RxBuffer[USART1_RX_BUFFER];
 #endif
 #ifdef IS_UART2
-    char usart2TxBuffer[USART2_TX_BUFFER];
-    char usart2RxBuffer[USART2_RX_BUFFER];
+    uint8_t usart2TxBuffer[USART2_TX_BUFFER];
+    uint8_t usart2RxBuffer[USART2_RX_BUFFER];
 #endif
 
 const sUartInstanceMap UARTInstanceMap[NUM_OF_UART] =  {
@@ -32,9 +32,6 @@ const sUartInstanceMap UARTInstanceMap[NUM_OF_UART] =  {
         usart1TxBuffer,
         USART1_RX_BUFFER,
         usart1RxBuffer,
-        0, //NO DMA
-        0, //NO DMA
-        0, //NO DMA
         NULL, //modificable, mirar ejemplo MTG
         NULL,
     },
@@ -50,9 +47,6 @@ const sUartInstanceMap UARTInstanceMap[NUM_OF_UART] =  {
         usart2TxBuffer,
         USART2_RX_BUFFER,
         usart2RxBuffer,
-        0, //NO DMA
-        0, //NO DMA
-        0, //NO DMA
         NULL, //modificable, mirar ejemplo MTG
         NULL,
     },

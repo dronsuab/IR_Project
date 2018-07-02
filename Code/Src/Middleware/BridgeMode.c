@@ -10,7 +10,7 @@
 #include "GPIO.h"
 #include "uart.h"
 
-#define MAX_CHARS 5
+#define MAX_CHARS 7
 
 static sLed Led;
 static sMuerto Muerto;
@@ -40,6 +40,7 @@ tBool enterBridgeMode(char *RxBuffer, uint8_t Rxlength, char *TxBuffer, uint8_t 
 	uint8_t searchedcharacter;
 	tBool error = FALSE;
 	char zeros[10];
+	char droneR[10];
 
 	initStructs();
 	initString(tag, 10);
@@ -69,12 +70,19 @@ tBool enterBridgeMode(char *RxBuffer, uint8_t Rxlength, char *TxBuffer, uint8_t 
 	if (strcmp(tag, "CFIRE") == 0)
 	{
 		strncpy(Disparo.controller, &RxBuffer[index[0]+1], (index[1]-index[0]-1));
-		strncpy(Disparo.weapon, &RxBuffer[index[1]+1], lastcharacter-index[1]-1);
+		strncpy(Disparo.weapon, &RxBuffer[index[1]+1], (index[2]-index[1]-1));
+		strncpy(Disparo.drone, &RxBuffer[index[2]+1], lastcharacter-index[2]-1);
 
-		strcpy(TxBuffer, "SHOT");
-		strcat(TxBuffer, "A");
+		strcpy(TxBuffer, "SHOT,");
+		strcat(TxBuffer, Disparo.controller);
+		strcat(TxBuffer, ",");
 		strcat(TxBuffer, Disparo.weapon);
-		strncpy(&TxBuffer[strlen(TxBuffer)], zeros, (10-strlen(TxBuffer)));
+		strcat(TxBuffer, ",");
+		strcat(TxBuffer, Disparo.drone);
+		strcat(TxBuffer, "/");
+//		i = strlen(TxBuffer);
+		if (strlen(TxBuffer)<TxLength)
+			strncpy(&TxBuffer[strlen(TxBuffer)], zeros, (TxLength-strlen(TxBuffer)));
 
 		error = TRUE;
 
@@ -118,12 +126,20 @@ tBool enterBridgeMode(char *RxBuffer, uint8_t Rxlength, char *TxBuffer, uint8_t 
 	else if (strcmp(tag, "SHOT") == 0)
 	{
 		strncpy(Disparo.controller, &RxBuffer[index[0]+1], (index[1]-index[0]-1));
-		strncpy(Disparo.weapon, &RxBuffer[index[1]+1], lastcharacter-index[1]-1);
-		strcpy(TxBuffer, "FIRE");
-		strcat(TxBuffer, Disparo.controller);
+		if (strcmp(Disparo.controller, "controller1") == 0)
+			strcpy(droneR, "drone1");
+		strncpy(Disparo.weapon, &RxBuffer[index[1]+1], (index[2]-index[1]-1));
+		strncpy(Disparo.drone, &RxBuffer[index[2]+1], lastcharacter-index[2]-1);
+
+		strcpy(TxBuffer, "FIRE,");
 		strcat(TxBuffer, DRONE_ID);
+		strcat(TxBuffer, ",");
+		strcat(TxBuffer, Disparo.drone);
+		strcat(TxBuffer, ",");
 		strcat(TxBuffer, Disparo.weapon);
+		strcat(TxBuffer, ",");
 		strcat(TxBuffer, SIDE);
+		strcat(TxBuffer, "/");
 
 		error = TRUE;
 	}

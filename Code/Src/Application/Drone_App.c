@@ -10,8 +10,8 @@
 /* Private variables */
 char SerialTXBuffer[50];
 char SerialRXBuffer[50];
-char IrDATXBuffer[10];
-char IrDARXBuffer[10];
+char IrDATXBuffer[30];
+char IrDARXBuffer[30];
 
 tBool pushed = FALSE;
 
@@ -126,11 +126,12 @@ void taskCreation(void)
 
 void sendDataUART(void *pvParameters){
 	osSemaphoreId semaphore = *((osSemaphoreId*) pvParameters);
-	strcpy(SerialTXBuffer, "DISPARO,DronA/");
 	while(1){
 		if (osSemaphoreWait(semaphore , 0) == osOK)
 		{
+			GPIOWrite(GPIO_1, GPIO_HIGH);
 			uartWrite(UART_2, SerialTXBuffer);
+
 		}
 	}
 }
@@ -151,7 +152,7 @@ void receiveDataUART(void *pvParameters){
 	while(1){
 		if (uartRead(UART_2, SerialRXBuffer, '/') == HAL_OK)
 		{
-				if(enterBridgeMode(SerialRXBuffer, strlen(SerialRXBuffer), IrDATXBuffer, strlen(IrDATXBuffer)) == TRUE)
+				if(enterBridgeMode(SerialRXBuffer, strlen(SerialRXBuffer), IrDATXBuffer, 30) == TRUE)
 					osSemaphoreRelease(semaphore);
 		}
 
@@ -196,7 +197,8 @@ void receiveIRData(void *pvParameters){
 	while(1){
 		if (irdaRead(IRDA1, IrDARXBuffer, '/') == HAL_OK)
 		{
-			enterBridgeMode(IrDATXBuffer, strlen(IrDATXBuffer), SerialRXBuffer, strlen(SerialRXBuffer));
+			GPIOWrite(GPIO_1, GPIO_LOW);
+			enterBridgeMode(IrDARXBuffer, strlen(IrDARXBuffer), SerialTXBuffer, 30);
 			osSemaphoreRelease(semaphore);
 		}
 	}

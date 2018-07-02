@@ -12,8 +12,8 @@
 #include "config.h"
 
 #ifdef IS_IRDA1
-    char irda1TxBuffer[10];
-    char irda1RxBuffer[10];
+    char irda1TxBuffer[30];
+    char irda1RxBuffer[30];
 #endif
 
 #ifdef IS_IRDA1

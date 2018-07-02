@@ -15,9 +15,6 @@ UART_HandleTypeDef uartHandlers[NUM_OF_UART];
 sUartContext uartCircularBuffers[NUM_OF_UART];
 uint8_t RxByte;
 static eUart uartPortIRQ;
-volatile uint8_t contador = 0;
-volatile tBool tiempo = FALSE;
-
 
 
 void uartInterruptHandler(eUart uartPort)
@@ -105,22 +102,10 @@ HAL_StatusTypeDef uartStart(void)
         {
             return HAL_ERROR;
         }
-//        if (i == UART_1)
-//        {
-//        	if (HAL_HalfDuplex_Init(uart_handler) == HAL_OK)
-//        	{
-//        		HAL_HalfDuplex_EnableReceiver(uart_handler);
-//        		return HAL_OK;
-//        	}
-//        }
-//        else
-//        {
-			if(HAL_UART_Init(uart_handler) != HAL_OK)
-			{
-				return HAL_ERROR;
-			}
-//        }
-
+        if(HAL_UART_Init(uart_handler) != HAL_OK)
+        {
+            return HAL_ERROR;
+        }
         HAL_UART_Receive_IT(uart_handler, &RxByte, 1 );
     }
     return HAL_OK;
@@ -131,13 +116,13 @@ HAL_StatusTypeDef uartRead(eUart uartPort, char* buffer, uint8_t lastChar)
     uint32_t i=0;
     uint8_t byte=0;
     uint32_t bufferSize = 30;
-    uint8_t result=HAL_ERROR;
+    uint8_t result;
 
-    if(GetFIFOPendingBytes(&uartCircularBuffers[uartPort].rxBuffer) < 1 ){
+    if(GetFIFOPendingBytes(&uartCircularBuffers[uartPort].rxBuffer) < 5 ){
 		initString(buffer,bufferSize);
 		result = HAL_ERROR;
     }else{
-    	GPIOWrite(GPIO_1, GPIO_HIGH);
+//    	GPIOWrite(GPIO_1, GPIO_HIGH);
         while((byte != lastChar) && (i<bufferSize) )
         {
             byte = GetFIFOByte(&uartCircularBuffers[uartPort].rxBuffer);
@@ -145,8 +130,7 @@ HAL_StatusTypeDef uartRead(eUart uartPort, char* buffer, uint8_t lastChar)
             i++;
         }
         ResetFIFO(&uartCircularBuffers[uartPort].rxBuffer);
-        if(byte == lastChar)
-        	result = HAL_OK;
+        result = HAL_OK;
     }
 
     return result;
@@ -154,7 +138,6 @@ HAL_StatusTypeDef uartRead(eUart uartPort, char* buffer, uint8_t lastChar)
 
 HAL_StatusTypeDef uartWrite(eUart uartPort, char* buffer)
 {
-
     HAL_StatusTypeDef error;
     error = HAL_UART_Transmit_IT(&uartHandlers[uartPort], (uint8_t*)buffer, strlen(buffer));
     while (HAL_UART_GetState(&uartHandlers[uartPort]) == HAL_UART_STATE_BUSY_TX ||
@@ -168,23 +151,22 @@ HAL_StatusTypeDef uartDriverWritePolling(eUart uartPort, char* buffer)
     return HAL_UART_Transmit(&uartHandlers[uartPort], (uint8_t*)buffer, strlen(buffer), HAL_MAX_DELAY);
 }
 
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+{
 
+}
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *uart_handler)
 {
-	if (tiempo)
-	{
-		GPIOWrite(GPIO_1, GPIO_HIGH);
-		if(GetFIFOFreeBytes(&uartCircularBuffers[uartPortIRQ].rxBuffer) > 0){
-			AddFIFOByte(&uartCircularBuffers[uartPortIRQ].rxBuffer, RxByte);
-		}
+
+	if(GetFIFOFreeBytes(&uartCircularBuffers[uartPortIRQ].rxBuffer) > 0){
+		AddFIFOByte(&uartCircularBuffers[uartPortIRQ].rxBuffer, RxByte);
 	}
-	else
-		tiempo = !tiempo;
 
 	 HAL_UART_Receive_IT(uart_handler, &RxByte, 1 );
 
-
 }
+
+
 
 
